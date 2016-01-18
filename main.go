@@ -25,6 +25,11 @@ func main() {
 		fmt.Println("invalid expression - invalid attributes requested")
 		os.Exit(1)
 	}
+
+	// parse tree optimizations
+	optimizeContentsContains(programRoot.children[3])
+
+	// walk file system
 	filepath.Walk(programRoot.children[2].sval, eval)
 }
 
