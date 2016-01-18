@@ -29,6 +29,10 @@ func main() {
 }
 
 func eval(path string, file os.FileInfo, err error) error {
+	if file == nil {
+		return nil
+	}
+
 	if evaluate(path, file, programRoot.children[3]) {
 		printRelevant(path, file)
 	}
