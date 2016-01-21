@@ -12,7 +12,7 @@ const (
 	T_AND
 	T_INTEGER
 	T_CONTAINS
-	T_CONTENTS
+	T_CONTENT
 	T_STARTSWITH
 	T_ENDSWITH
 	T_NAME
@@ -84,8 +84,8 @@ func nodeString(treeNode *tnode) string {
 		return "LITERAL (\"" + treeNode.sval + "\")"
 	case T_CONTAINS:
 		return "CONTAINS"
-	case T_CONTENTS:
-		return "CONTENTS"
+	case T_CONTENT:
+		return "CONTENT"
 	case T_STARTSWITH:
 		return "STARTSWITH"
 	case T_ENDSWITH:

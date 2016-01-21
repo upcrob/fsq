@@ -29,7 +29,7 @@
 %token M
 %token G
 %token CONTAINS
-%token CONTENTS
+%token CONTENT
 %token STARTSWITH
 %token ENDSWITH
 %token LT
@@ -214,9 +214,9 @@ attribute:
 		$$ = new(tnode)
 		$$.ntype = T_PATH
 	}
-	| CONTENTS {
+	| CONTENT {
 		$$ = new(tnode)
-		$$.ntype = T_CONTENTS
+		$$.ntype = T_CONTENT
 	}
 	;
 %%

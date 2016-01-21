@@ -77,7 +77,7 @@ func contains(ntype int, search string, path string, info os.FileInfo) bool {
 		return strings.Contains(info.Name(), search)
 	} else if ntype == T_PATH  {
 		return strings.Contains(path, search)
-	} else if ntype == T_CONTENTS {
+	} else if ntype == T_CONTENT {
 		return fileContainsString(path, search)
 	}
 	return false

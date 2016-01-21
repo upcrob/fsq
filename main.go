@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// parse tree optimizations
-	optimizeContentsContains(programRoot.children[3])
+	optimizeContentContains(programRoot.children[3])
 
 	// walk file system
 	filepath.Walk(programRoot.children[2].sval, eval)

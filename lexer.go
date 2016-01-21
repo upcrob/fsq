@@ -18,7 +18,7 @@ var keywordMappings map[int]string = map[int]string {
 	WHERE: "where",
 	IN: "in",
 	CONTAINS: "contains",
-	CONTENTS: "contents",
+	CONTENT: "content",
 	AND: "and",
 	OR: "or",
 	K: "k",
