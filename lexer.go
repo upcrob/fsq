@@ -21,6 +21,9 @@ var keywordMappings map[int]string = map[int]string {
 	CONTENTS: "contents",
 	AND: "and",
 	OR: "or",
+	K: "k",
+	M: "m",
+	G: "g",
 	STARTSWITH: "startswith",
 	ENDSWITH: "endswith",
 }
@@ -91,6 +94,12 @@ func tokenString(symbolId int) string {
 		return "LITERAL"
 	case INTEGER:
 		return "INTEGER"
+	case K:
+		return "K"
+	case M:
+		return "M"
+	case G:
+		return "G"
 	case STARTSWITH:
 		return "STARTSWITH"
 	case ENDSWITH:

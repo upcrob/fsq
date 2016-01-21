@@ -8,7 +8,7 @@ The `fsq` utility is a tool for doing ad-hoc queries against a file system using
 
 `fsq` is designed to be quickly invoked from the command line.  For example, in order to find all files under the current directory that start with the characters 'hello' and are larger than 5 mb, the following query could be used:
 
-	fsq "name in '.' where name startswith 'hello' and size > 5"
+	fsq "name in '.' where name startswith 'hello' and size > 5m"
 
 ## Query Structure
 
@@ -43,9 +43,19 @@ The set of conditions tells `fsq` what files it should print out as matches.  In
 * isfile (this operator does not take any arguments)
 * contains
 
-Additionally, parentheses as well as the logical operators *or* and *and* can be used to group conditions.  For example:
+### Logic Operators
+
+Parentheses as well as the logical operators *or* and *and* can be used to group conditions.  For example:
 
 	fsq "name in '.' where name startswith 'hello' or (isdir and startswith 'world')"
+
+### Size Qualifiers
+
+The following size qualifiers can be appended to integer values to indicate non-default units.  These are especially useful when specifying file sizes in expressions.  If no size qualifier is appended to an integer, `fsq` compares the value in bytes.
+
+* k - Kilo
+* m - Mega
+* g - Giga
 
 ## Building
 

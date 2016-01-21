@@ -67,7 +67,7 @@ func resolveAsString(path string, n *tnode, info os.FileInfo) string {
 
 func resolveAsInt(n *tnode, info os.FileInfo) int {
 	if n.ntype == T_SIZE {
-		return int(info.Size() / 1048576)	// megabytes
+		return int(info.Size())
 	}
 	return 0
 }

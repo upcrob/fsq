@@ -25,6 +25,9 @@
 %token IN
 %token AND
 %token OR
+%token K
+%token M
+%token G
 %token CONTAINS
 %token CONTENTS
 %token STARTSWITH
@@ -64,6 +67,21 @@ value:
 		$$ = new(tnode)
 		$$.ntype = T_LITERAL
 		$$.sval = $1
+	}
+	| INTEGER K {
+		$$ = new(tnode)
+		$$.ntype = T_INTEGER
+		$$.ival = $1 * 1000
+	}
+	| INTEGER M {
+		$$ = new(tnode)
+		$$.ntype = T_INTEGER
+		$$.ival = $1 * 1000000
+	}
+	| INTEGER G {
+		$$ = new(tnode)
+		$$.ntype = T_INTEGER
+		$$.ival = $1 * 1000000000
 	}
 	| INTEGER {
 		$$ = new(tnode)

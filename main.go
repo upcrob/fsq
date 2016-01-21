@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 func main() {
@@ -45,31 +46,23 @@ func eval(path string, file os.FileInfo, err error) error {
 }
 
 func printRelevant(path string, file os.FileInfo) {
-	printStarted := false
+	if attributeRequested(T_SIZE) {
+		fmt.Print(pad(strconv.Itoa(int(file.Size())), 11) + " ")
+	}
+	if attributeRequested(T_NAME) {
+		name := file.Name()
+		if file.IsDir() {
+			name += "/"
+		}
+		fmt.Print(pad(name, 25) + " ")
+	}
 	if attributeRequested(T_PATH) {
 		if file.IsDir() {
 			path += "/"
 		}
 		fmt.Print(path)
-		printStarted = true
 	}
-	if attributeRequested(T_NAME) {
-		if printStarted {
-			fmt.Print(",")
-		}
-		name := file.Name()
-		if file.IsDir() {
-			name += "/"
-		}
-		fmt.Print(name)
-		printStarted = true
-	}
-	if attributeRequested(T_SIZE) {
-		if printStarted {
-			fmt.Print(",")
-		}
-		fmt.Print(int(file.Size() / 1048576))
-	}
+
 	fmt.Println()
 }
 
@@ -91,4 +84,12 @@ func validAttributesRequested() bool {
 		}
 	}
 	return true
+}
+
+func pad(str string, size int) string {
+	ilen := len(str)
+	for i := 0; i < size - ilen; i++ {
+		str += " "
+	}
+	return str
 }
