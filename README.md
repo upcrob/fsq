@@ -60,6 +60,7 @@ The following size qualifiers can be appended to integer values to indicate non-
 ## Building
 
 The `go` compiler is required to build `fsq`.  If you have `make` installed, `fsq` can be installed with:
+
 	make install
 
 Otherwise, the following commands will need to be run while in the `fsq` directory:
