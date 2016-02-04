@@ -12,7 +12,7 @@ const DATE_FORMAT = "01/02/2006"
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Println("usage: test <expression>")
+		fmt.Println("usage: fsq <expression>")
 		os.Exit(1)
 	}
 
