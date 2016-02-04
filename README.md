@@ -18,7 +18,7 @@ Notice that `fsq` takes a single argument: the expression.  This expression is c
 
 The attribute list specifies which attributes are printed to standard out by `fsq`.  In the above case, this is just the filename ('name').
 
-The root directory tells `fsq` where to start searching in the file system.  Every directory under the root will be searched recursively for files matching the given conditions.  In the above case, it starts searching at the current directory ('.').
+The root directory tells `fsq` where to start searching in the file system.  Every directory under the root will be searched recursively for files matching the given conditions.  In the above case, it starts searching at the current directory ('.').  Note that if the "in <location>" part of the expression is left out, it will default to the current directory.
 
 The set of conditions tells `fsq` what files it should print out as matches.  In the above case, it looks for a name that *startswith* the string 'hello' and has a *size* on disk greater than 5 megabytes.
 

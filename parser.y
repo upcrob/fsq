@@ -61,6 +61,19 @@ program:
 		addChild(programRoot, n)
 		addChild(programRoot, $5)
 	}
+	| attribute_list WHERE or_expr EOF {
+		programRoot = new(tnode)
+		programRoot.ntype = T_PROGRAM
+		addChild(programRoot, $1)
+		loc := new(tnode)
+		loc.ntype = T_IN
+		locPath := new(tnode)
+		locPath.ntype = T_LITERAL
+		locPath.sval = "."
+		addChild(programRoot, loc)
+		addChild(programRoot, locPath)
+		addChild(programRoot, $3)
+	}
 	;
 
 value:
