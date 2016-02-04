@@ -30,6 +30,7 @@
 %token G
 %token CONTAINS
 %token CONTENT
+%token MODIFIED
 %token STARTSWITH
 %token ENDSWITH
 %token LT
@@ -217,6 +218,10 @@ attribute:
 	| CONTENT {
 		$$ = new(tnode)
 		$$.ntype = T_CONTENT
+	}
+	| MODIFIED {
+		$$ = new(tnode)
+		$$.ntype = T_MODIFIED
 	}
 	;
 %%

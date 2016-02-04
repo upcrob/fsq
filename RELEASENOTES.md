@@ -1,7 +1,8 @@
 # Release Notes
 
-## 0.0.2
+## Next Release
 
+* Added "modified" attribute to display and compare file modification time.
 * Fixed directory traversal bug.
 * Added optimization for "contents contains" queries.
 * Renamed "contents" keyword to "content".

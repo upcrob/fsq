@@ -13,6 +13,7 @@ const (
 	T_INTEGER
 	T_CONTAINS
 	T_CONTENT
+	T_MODIFIED
 	T_STARTSWITH
 	T_ENDSWITH
 	T_NAME
@@ -86,6 +87,8 @@ func nodeString(treeNode *tnode) string {
 		return "CONTAINS"
 	case T_CONTENT:
 		return "CONTENT"
+	case T_MODIFIED:
+		return "MODIFIED"
 	case T_STARTSWITH:
 		return "STARTSWITH"
 	case T_ENDSWITH:

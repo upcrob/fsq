@@ -7,6 +7,9 @@ import (
 	"strconv"
 )
 
+const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
+const DATE_FORMAT = "01/02/2006"
+
 func main() {
 	if len(os.Args) != 2 {
 		fmt.Println("usage: test <expression>")
@@ -46,6 +49,9 @@ func eval(path string, file os.FileInfo, err error) error {
 }
 
 func printRelevant(path string, file os.FileInfo) {
+	if attributeRequested(T_MODIFIED) {
+		fmt.Print(file.ModTime().Format(TIMESTAMP_FORMAT) + "  ")
+	}
 	if attributeRequested(T_SIZE) {
 		fmt.Print(pad(strconv.Itoa(int(file.Size())), 11) + " ")
 	}
@@ -79,7 +85,7 @@ func attributeRequested(ntype int) bool {
 func validAttributesRequested() bool {
 	attribs := programRoot.children[0].children
 	for _, v := range attribs {
-		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE) {
+		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE || v.ntype == T_MODIFIED) {
 			return false
 		}
 	}

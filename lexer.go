@@ -19,6 +19,7 @@ var keywordMappings map[int]string = map[int]string {
 	IN: "in",
 	CONTAINS: "contains",
 	CONTENT: "content",
+	MODIFIED: "modified",
 	AND: "and",
 	OR: "or",
 	K: "k",
@@ -94,6 +95,8 @@ func tokenString(symbolId int) string {
 		return "LITERAL"
 	case INTEGER:
 		return "INTEGER"
+	case MODIFIED:
+		return "MODIFIED"
 	case K:
 		return "K"
 	case M:

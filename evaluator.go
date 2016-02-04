@@ -2,6 +2,8 @@ package main
 
 import (
 	"os"
+	"fmt"
+	"time"
 	"strings"
 )
 
@@ -15,27 +17,27 @@ func evaluate(path string, info os.FileInfo, n *tnode) bool {
 			return true
 		}
 	} else if n.ntype == T_GT {
-		if resolveAsInt(left(n), info) > right(n).ival {
+		if resolveAsInt(left(n), info) > resolveAsInt(right(n), info) {
 			return true
 		}
 	} else if n.ntype == T_GTE {
-		if resolveAsInt(left(n), info) >= right(n).ival {
+		if resolveAsInt(left(n), info) >= resolveAsInt(right(n), info) {
 			return true
 		}
 	} else if n.ntype == T_LT {
-		if resolveAsInt(left(n), info) < right(n).ival {
+		if resolveAsInt(left(n), info) < resolveAsInt(right(n), info) {
 			return true
 		}
 	} else if n.ntype == T_LTE {
-		if resolveAsInt(left(n), info) <= right(n).ival {
+		if resolveAsInt(left(n), info) <= resolveAsInt(right(n), info) {
 			return true
 		}
 	} else if n.ntype == T_EQ {
-		if resolveAsInt(left(n), info) == right(n).ival {
+		if resolveAsInt(left(n), info) == resolveAsInt(right(n), info) {
 			return true
 		}
 	} else if n.ntype == T_NEQ {
-		if resolveAsInt(left(n), info) != right(n).ival {
+		if resolveAsInt(left(n), info) != resolveAsInt(right(n), info) {
 			return true
 		}
 	} else if n.ntype == T_OR {
@@ -66,8 +68,28 @@ func resolveAsString(path string, n *tnode, info os.FileInfo) string {
 }
 
 func resolveAsInt(n *tnode, info os.FileInfo) int {
-	if n.ntype == T_SIZE {
+	if n.ntype == T_INTEGER {
+		return n.ival
+	} else if n.ntype == T_SIZE {
 		return int(info.Size())
+	} else if n.ntype == T_LITERAL {
+		// try to parse string as timestamp/date
+		t, err := time.Parse(TIMESTAMP_FORMAT, n.sval)
+		if err == nil {
+			return int(t.Unix())
+		}
+		d, err := time.Parse(DATE_FORMAT, n.sval)
+		if err == nil {
+			return int(d.Unix())
+		}
+		fmt.Println("Failed to parse string value: '" + n.sval +
+			"'. If this is a date/time, be sure to follow one of the following two formats exactly: " +
+			"\"" + TIMESTAMP_FORMAT + "\", \"" + DATE_FORMAT + "\"")
+		os.Exit(1)
+	} else if n.ntype == T_MODIFIED {
+		_, zone := info.ModTime().Zone()
+		modtime := int(info.ModTime().Unix()) + zone
+		return modtime
 	}
 	return 0
 }
