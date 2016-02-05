@@ -28,6 +28,7 @@ The set of conditions tells `fsq` what files it should print out as matches.  In
 * path
 * size
 * content
+* modified
 
 ### Supported Conditional Operators
 
