@@ -48,7 +48,7 @@ The set of conditions tells `fsq` what files it should print out as matches.  In
 
 Parentheses as well as the logical operators *or* and *and* can be used to group conditions.  For example:
 
-	fsq "name in '.' where name startswith 'hello' or (isdir and startswith 'world')"
+	fsq "name in '.' where name startswith 'hello' or (isdir and name startswith 'world')"
 
 ### Size Qualifiers
 
