@@ -8,6 +8,7 @@
 * Added optimization for "contents contains" queries.
 * Renamed "contents" keyword to "content".
 * Updated "size" display and added units suffixes to integer values.
+* Added support for "name" and "path" string equality checking.
 
 ## 0.0.1
 

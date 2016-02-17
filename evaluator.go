@@ -33,12 +33,32 @@ func evaluate(path string, info os.FileInfo, n *tnode) bool {
 			return true
 		}
 	} else if n.ntype == T_EQ {
-		if resolveAsInt(left(n), info) == resolveAsInt(right(n), info) {
-			return true
+		if left(n).ntype == T_NAME {
+			if resolveAsString(path, left(n), info) == right(n).sval {
+				return true
+			}
+		} else if left(n).ntype == T_PATH {
+			if resolveAsString(path, left(n), info) == right(n).sval {
+				return true
+			}
+		} else {
+			if resolveAsInt(left(n), info) == resolveAsInt(right(n), info) {
+				return true
+			}
 		}
 	} else if n.ntype == T_NEQ {
-		if resolveAsInt(left(n), info) != resolveAsInt(right(n), info) {
-			return true
+		if left(n).ntype == T_NAME {
+			if resolveAsString(path, left(n), info) != right(n).sval {
+				return true
+			}
+		} else if left(n).ntype == T_PATH {
+			if resolveAsString(path, left(n), info) != right(n).sval {
+				return true
+			}
+		} else {
+			if resolveAsInt(left(n), info) != resolveAsInt(right(n), info) {
+				return true
+			}
 		}
 	} else if n.ntype == T_OR {
 		if evaluate(path, info, left(n)) || evaluate(path, info, right(n)) {
