@@ -15,7 +15,7 @@
 %token COMMA
 %token OPAREN
 %token CPAREN
-%token <sval> LITERAL
+%token <sval> STRING
 %token <sval> NAME
 %token <ival> SIZE
 %token <sval> PATH
@@ -50,13 +50,13 @@
 %%
 
 program:
-	attribute_list location LITERAL WHERE or_expr EOF {
+	attribute_list location STRING WHERE or_expr EOF {
 		programRoot = new(tnode)
 		programRoot.ntype = T_PROGRAM
 		addChild(programRoot, $1)
 		addChild(programRoot, $2)
 		n := new(tnode)
-		n.ntype = T_LITERAL
+		n.ntype = T_STRING
 		n.sval = $3
 		addChild(programRoot, n)
 		addChild(programRoot, $5)
@@ -68,7 +68,7 @@ program:
 		loc := new(tnode)
 		loc.ntype = T_IN
 		locPath := new(tnode)
-		locPath.ntype = T_LITERAL
+		locPath.ntype = T_STRING
 		locPath.sval = "."
 		addChild(programRoot, loc)
 		addChild(programRoot, locPath)
@@ -77,9 +77,9 @@ program:
 	;
 
 value:
-	LITERAL {
+	STRING {
 		$$ = new(tnode)
-		$$.ntype = T_LITERAL
+		$$.ntype = T_STRING
 		$$.sval = $1
 	}
 	| INTEGER K {

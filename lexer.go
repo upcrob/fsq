@@ -55,10 +55,10 @@ func (lexer *Lexer) Lex(lval *yySymType) int {
 	} else if keyword, klen := getKeyword(lexer.expr); keyword != -1 {
 		lexer.expr = lexer.expr[klen:]
 		return keyword
-	} else if literal, llen := getLiteral(lexer.expr); literal != "" {
+	} else if str, llen := getStringLiteral(lexer.expr); str != "" {
 		lexer.expr = lexer.expr[llen:]
-		lval.sval = literal
-		return LITERAL
+		lval.sval = str
+		return STRING
 	}
 
 	lexer.expr = lexer.expr[1:]
@@ -91,8 +91,8 @@ func tokenString(symbolId int) string {
 		return "EQ"
 	case NEQ:
 		return "NEQ"
-	case LITERAL:
-		return "LITERAL"
+	case STRING:
+		return "STRING"
 	case INTEGER:
 		return "INTEGER"
 	case MODIFIED:
@@ -135,7 +135,7 @@ func getWhitespaceCount(expr string) int {
 	return i
 }
 
-func getLiteral(expr string) (string, int) {
+func getStringLiteral(expr string) (string, int) {
 	i := 0
 	if expr[i] == '\'' {
 		i++

@@ -92,7 +92,7 @@ func resolveAsInt(n *tnode, info os.FileInfo) int {
 		return n.ival
 	} else if n.ntype == T_SIZE {
 		return int(info.Size())
-	} else if n.ntype == T_LITERAL {
+	} else if n.ntype == T_STRING {
 		// try to parse string as timestamp/date
 		t, err := time.Parse(TIMESTAMP_FORMAT, n.sval)
 		if err == nil {

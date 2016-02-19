@@ -29,7 +29,7 @@ const (
 	T_GTE
 	T_EQ
 	T_NEQ
-	T_LITERAL
+	T_STRING
 )
 
 type tnode struct {
@@ -81,8 +81,8 @@ func nodeString(treeNode *tnode) string {
 		return "AND"
 	case T_INTEGER:
 		return "INTEGER (" + strconv.Itoa(treeNode.ival) + ")"
-	case T_LITERAL:
-		return "LITERAL (\"" + treeNode.sval + "\")"
+	case T_STRING:
+		return "STRING (\"" + treeNode.sval + "\")"
 	case T_CONTAINS:
 		return "CONTAINS"
 	case T_CONTENT:
