@@ -120,7 +120,7 @@ func contains(ntype int, search string, path string, info os.FileInfo) bool {
 	} else if ntype == T_PATH  {
 		return strings.Contains(path, search)
 	} else if ntype == T_CONTENT {
-		return fileContainsString(path, search)
+		return !info.IsDir() && fileContainsString(path, search)
 	}
 	return false
 }
