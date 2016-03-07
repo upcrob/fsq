@@ -9,13 +9,9 @@ import (
 
 func evaluate(path string, info os.FileInfo, n *tnode) bool {
 	if n.ntype == T_STARTSWITH {
-		if strings.HasPrefix(resolveAsString(path, left(n), info), right(n).sval) {
-			return true
-		}
+		return startsWith(path, left(n), info, right(n).sval)
 	} else if n.ntype == T_ENDSWITH {
-		if strings.HasSuffix(resolveAsString(path, left(n), info), right(n).sval) {
-			return true
-		}
+		return endsWith(path, left(n), info, right(n).sval)
 	} else if n.ntype == T_GT {
 		if resolveAsInt(left(n), info) > resolveAsInt(right(n), info) {
 			return true
@@ -123,4 +119,20 @@ func contains(ntype int, search string, path string, info os.FileInfo) bool {
 		return !info.IsDir() && fileContainsString(path, search)
 	}
 	return false
+}
+
+func startsWith(path string, n *tnode, info os.FileInfo, search string) bool {
+	if n.ntype == T_CONTENT {
+		return fileStartsWithString(path, search)
+	} else {
+		return strings.HasPrefix(resolveAsString(path, n, info), search)
+	}
+}
+
+func endsWith(path string, n *tnode, info os.FileInfo, search string) bool {
+	if n.ntype == T_CONTENT {
+		return fileEndsWithString(path, info, search)
+	} else {
+		return strings.HasSuffix(resolveAsString(path, n, info), search)
+	}
 }

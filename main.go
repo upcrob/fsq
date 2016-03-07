@@ -31,7 +31,9 @@ func main() {
 	}
 
 	// parse tree optimizations
-	optimizeContentContains(programRoot.children[3])
+	shiftExpressionRight(programRoot.children[3], isContentStartswithExpression)
+	shiftExpressionRight(programRoot.children[3], isContentEndswithExpression)
+	shiftExpressionRight(programRoot.children[3], isContentContainsExpression)
 
 	// walk file system
 	filepath.Walk(programRoot.children[2].sval, eval)
