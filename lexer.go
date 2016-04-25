@@ -9,26 +9,25 @@ type Lexer struct {
 	expr string
 }
 
-var keywordMappings map[int]string = map[int]string {
-	NAME: "name",
-	SIZE: "size",
-	ISFILE: "isfile",
-	ISDIR: "isdir",
-	PATH: "path",
-	WHERE: "where",
-	IN: "in",
-	CONTAINS: "contains",
-	CONTENT: "content",
-	MODIFIED: "modified",
-	AND: "and",
-	OR: "or",
-	K: "k",
-	M: "m",
-	G: "g",
+var keywordMappings map[int]string = map[int]string{
+	NAME:       "name",
+	SIZE:       "size",
+	ISFILE:     "isfile",
+	ISDIR:      "isdir",
+	PATH:       "path",
+	WHERE:      "where",
+	IN:         "in",
+	CONTAINS:   "contains",
+	CONTENT:    "content",
+	MODIFIED:   "modified",
+	AND:        "and",
+	OR:         "or",
+	K:          "k",
+	M:          "m",
+	G:          "g",
 	STARTSWITH: "startswith",
-	ENDSWITH: "endswith",
+	ENDSWITH:   "endswith",
 }
-
 
 func (lexer *Lexer) Lex(lval *yySymType) int {
 	// trim leading whitespace
@@ -145,7 +144,7 @@ func getStringLiteral(expr string) (string, int) {
 		}
 
 		if i < len(expr) && expr[i] == '\'' {
-			return expr[1:i], i+1
+			return expr[1:i], i + 1
 		}
 	}
 	return "", 0

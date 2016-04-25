@@ -96,7 +96,7 @@ func validAttributesRequested() bool {
 
 func pad(str string, size int) string {
 	ilen := len(str)
-	for i := 0; i < size - ilen; i++ {
+	for i := 0; i < size-ilen; i++ {
 		str += " "
 	}
 	return str

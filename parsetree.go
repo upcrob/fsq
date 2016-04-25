@@ -33,9 +33,9 @@ const (
 )
 
 type tnode struct {
-	ntype int
-	ival int
-	sval string
+	ntype    int
+	ival     int
+	sval     string
 	children []*tnode
 }
 
@@ -65,12 +65,12 @@ func printTreeHelper(n *tnode, depth int) {
 	}
 	fmt.Println(nodeString(n))
 	for i := 0; i < len(n.children); i++ {
-		printTreeHelper(n.children[i], depth + 1)
+		printTreeHelper(n.children[i], depth+1)
 	}
 }
 
 func nodeString(treeNode *tnode) string {
-	switch (treeNode.ntype) {
+	switch treeNode.ntype {
 	case T_PROGRAM:
 		return "PROGRAM"
 	case T_ALIST:

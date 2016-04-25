@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
-	"time"
+	"os"
 	"strings"
+	"time"
 )
 
 func evaluate(path string, info os.FileInfo, n *tnode) bool {
@@ -113,7 +113,7 @@ func resolveAsInt(n *tnode, info os.FileInfo) int {
 func contains(ntype int, search string, path string, info os.FileInfo) bool {
 	if ntype == T_NAME {
 		return strings.Contains(info.Name(), search)
-	} else if ntype == T_PATH  {
+	} else if ntype == T_PATH {
 		return strings.Contains(path, search)
 	} else if ntype == T_CONTENT {
 		return !info.IsDir() && fileContainsString(path, search)

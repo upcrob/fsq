@@ -39,7 +39,7 @@ func fileEndsWithString(path string, info os.FileInfo, str string) bool {
 			return false
 		}
 
-		if cbuff[0] >= 32 || j < bsize - 1 {
+		if cbuff[0] >= 32 || j < bsize-1 {
 			buff[j] = cbuff[0]
 			j--
 		}
@@ -68,14 +68,14 @@ func fileContainsString(path string, str string) bool {
 			buff = 2
 			_, readErr = f.Read(buff1)
 
-			if strings.Contains(string(string(buff2) + string(buff1)), str) {
+			if strings.Contains(string(string(buff2)+string(buff1)), str) {
 				return true
 			}
 		} else {
 			buff = 1
 			_, readErr = f.Read(buff2)
 
-			if strings.Contains(string(string(buff1) + string(buff2)), str) {
+			if strings.Contains(string(string(buff1)+string(buff2)), str) {
 				return true
 			}
 		}
