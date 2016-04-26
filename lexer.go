@@ -22,6 +22,7 @@ var keywordMappings map[int]string = map[int]string{
 	MODIFIED:   "modified",
 	AND:        "and",
 	OR:         "or",
+	NOT:        "not",
 	K:          "k",
 	M:          "m",
 	G:          "g",

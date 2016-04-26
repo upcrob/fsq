@@ -64,6 +64,8 @@ func evaluate(path string, info os.FileInfo, n *tnode) bool {
 		if evaluate(path, info, left(n)) && evaluate(path, info, right(n)) {
 			return true
 		}
+	} else if n.ntype == T_NOT {
+		return !evaluate(path, info, left(n))
 	} else if n.ntype == T_ISFILE {
 		return !info.IsDir()
 	} else if n.ntype == T_ISDIR {

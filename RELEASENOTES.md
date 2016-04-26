@@ -10,6 +10,7 @@
 * Updated "size" display and added units suffixes to integer values.
 * Added support for "name" and "path" string equality checking.
 * Added support for "content" to "startswith" and "endswith" queries.
+* Added expression negation.
 
 ## 0.0.1
 

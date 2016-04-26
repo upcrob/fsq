@@ -25,6 +25,7 @@
 %token IN
 %token AND
 %token OR
+%token NOT
 %token K
 %token M
 %token G
@@ -41,7 +42,7 @@
 %token NEQ
 %token <ival> INTEGER
 
-%type <tval> attribute attribute_list location or_expr and_expr logic_expr value program
+%type <tval> attribute attribute_list location or_expr and_expr not_expr logic_expr value program
 
 // ========================================================
 // BEGIN GRAMMAR
@@ -117,11 +118,22 @@ or_expr:
 	;
 
 and_expr:
-	and_expr AND logic_expr {
+	and_expr AND not_expr {
 		$$ = new(tnode)
 		$$.ntype = T_AND
 		addChild($$, $1)
 		addChild($$, $3)
+	}
+	| not_expr {
+		$$ = $1
+	}
+	;
+
+not_expr:
+	NOT logic_expr {
+		$$ = new(tnode)
+		$$.ntype = T_NOT
+		addChild($$, $2)
 	}
 	| logic_expr {
 		$$ = $1
