@@ -1,0 +1,19 @@
+{
+    "package": {
+        "name": "fsq",
+        "repo": "generic",
+        "subject": "upcrob",
+        "desc": "The fsq utility is a tool for doing ad-hoc queries against a file system using a SQL-like expression language. This is useful for finding files that match certain criteria without writing a one-off script to do so.",
+        "website_url": "https://github.com/upcrob/fsq",
+        "issue_tracker_url": "https://github.com/upcrob/fsq/issues",
+        "vcs_url": "https://github.com/upcrob/fsq.git",
+        "licenses": ["BSD 3-Clause"]
+    },
+
+    "version": {
+        "name": "1.0.0"
+    },
+
+    "files": [{"includePattern": "bin/(.*)", "uploadPattern": "$1"}],
+    "publish": true
+}

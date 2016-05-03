@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.0.0
 
 * Defaults to the current directory when the location clause is not present in the expression.
 * Added "modified" attribute to display and compare file modification time.
