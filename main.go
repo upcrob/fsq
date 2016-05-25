@@ -44,6 +44,8 @@ func main() {
 func eval(path string, file os.FileInfo, err error) error {
 	if file == nil {
 		return nil
+	} else if path == "." {
+		return nil
 	}
 
 	if evaluate(path, file, programRoot.children[3]) {

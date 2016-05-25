@@ -3,6 +3,7 @@
 ## Next Release
 
 * Added "ignorecase" keyword for case-insensitive string comparisons.
+* Removed the '.' directory from search results.
 
 ## 1.0.0
 
