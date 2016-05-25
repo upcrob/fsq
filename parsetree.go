@@ -13,10 +13,13 @@ const (
 	T_NOT
 	T_INTEGER
 	T_CONTAINS
+	T_ICCONTAINS
 	T_CONTENT
 	T_MODIFIED
 	T_STARTSWITH
+	T_ICSTARTSWITH
 	T_ENDSWITH
+	T_ICENDSWITH
 	T_NAME
 	T_PATH
 	T_ISFILE
@@ -29,7 +32,9 @@ const (
 	T_GT
 	T_GTE
 	T_EQ
+	T_ICEQ
 	T_NEQ
+	T_ICNEQ
 	T_STRING
 )
 
@@ -86,14 +91,20 @@ func nodeString(treeNode *tnode) string {
 		return "STRING (\"" + treeNode.sval + "\")"
 	case T_CONTAINS:
 		return "CONTAINS"
+	case T_ICCONTAINS:
+		return "ICCONTAINS"
 	case T_CONTENT:
 		return "CONTENT"
 	case T_MODIFIED:
 		return "MODIFIED"
 	case T_STARTSWITH:
 		return "STARTSWITH"
+	case T_ICSTARTSWITH:
+		return "ICSTARTSWITH"
 	case T_ENDSWITH:
 		return "ENDSWITH"
+	case T_ICENDSWITH:
+		return "ICENDSWITH"
 	case T_NAME:
 		return "NAME"
 	case T_PATH:
@@ -112,8 +123,12 @@ func nodeString(treeNode *tnode) string {
 		return "GTE"
 	case T_EQ:
 		return "EQ"
+	case T_ICEQ:
+		return "ICEQ"
 	case T_NEQ:
 		return "NEQ"
+	case T_ICNEQ:
+		return "ICNEQ"
 	case T_ISFILE:
 		return "ISFILE"
 	case T_ISDIR:

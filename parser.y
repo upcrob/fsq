@@ -34,6 +34,7 @@
 %token MODIFIED
 %token STARTSWITH
 %token ENDSWITH
+%token IGNORECASE
 %token LT
 %token LTE
 %token GT
@@ -179,11 +180,23 @@ logic_expr:
 		addChild($$, $1)
 		addChild($$, $3)
 	}
+	| attribute IGNORECASE EQ value {
+		$$ = new(tnode)
+		$$.ntype = T_ICEQ
+		addChild($$, $1)
+		addChild($$, $4)
+	}
 	| attribute NEQ value {
 		$$ = new(tnode)
 		$$.ntype = T_NEQ
 		addChild($$, $1)
 		addChild($$, $3)
+	}
+	| attribute IGNORECASE NEQ value {
+		$$ = new(tnode)
+		$$.ntype = T_ICNEQ
+		addChild($$, $1)
+		addChild($$, $4)
 	}
 	| attribute CONTAINS value {
 		$$ = new(tnode)
@@ -191,17 +204,35 @@ logic_expr:
 		addChild($$, $1)
 		addChild($$, $3)
 	}
+	| attribute IGNORECASE CONTAINS value {
+		$$ = new(tnode)
+		$$.ntype = T_ICCONTAINS
+		addChild($$, $1)
+		addChild($$, $4)
+	}
 	| attribute STARTSWITH value {
 		$$ = new(tnode)
 		$$.ntype = T_STARTSWITH
 		addChild($$, $1)
 		addChild($$, $3)
 	}
+	| attribute IGNORECASE STARTSWITH value {
+		$$ = new(tnode)
+		$$.ntype = T_ICSTARTSWITH
+		addChild($$, $1)
+		addChild($$, $4)
+	}
 	| attribute ENDSWITH value {
 		$$ = new(tnode)
 		$$.ntype = T_ENDSWITH
 		addChild($$, $1)
 		addChild($$, $3)
+	}
+	| attribute IGNORECASE ENDSWITH value {
+		$$ = new(tnode)
+		$$.ntype = T_ICENDSWITH
+		addChild($$, $1)
+		addChild($$, $4)
 	}
 	| OPAREN or_expr CPAREN {
 		$$ = $2
@@ -250,4 +281,3 @@ attribute:
 	}
 	;
 %%
-

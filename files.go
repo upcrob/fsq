@@ -3,9 +3,10 @@ package main
 import (
 	"os"
 	"strings"
+	"unicode"
 )
 
-func fileStartsWithString(path string, str string) bool {
+func fileStartsWithString(path string, str string, caseSensitive bool) bool {
 	f, err := os.Open(path)
 	if err != nil {
 		return false
@@ -18,10 +19,15 @@ func fileStartsWithString(path string, str string) bool {
 		return false
 	}
 
-	return str == string(buff)
+	startValue := string(buff)
+	if !caseSensitive {
+		startValue = strings.ToLower(startValue)
+	}
+
+	return str == startValue
 }
 
-func fileEndsWithString(path string, info os.FileInfo, str string) bool {
+func fileEndsWithString(path string, info os.FileInfo, str string, caseSensitive bool) bool {
 	f, err := os.Open(path)
 	if err != nil {
 		return false
@@ -45,11 +51,16 @@ func fileEndsWithString(path string, info os.FileInfo, str string) bool {
 		}
 	}
 
-	return str == string(buff)
+	endValue := string(buff)
+	if !caseSensitive {
+		endValue = strings.ToLower(endValue)
+	}
+
+	return str == endValue
 
 }
 
-func fileContainsString(path string, str string) bool {
+func fileContainsString(path string, str string, caseSensitive bool) bool {
 	bsize := len(str)
 	f, err := os.Open(path)
 	if err != nil {
@@ -68,12 +79,24 @@ func fileContainsString(path string, str string) bool {
 			buff = 2
 			_, readErr = f.Read(buff1)
 
+			if !caseSensitive {
+				for i := 0; i < bsize; i++ {
+					buff1[i] = byte(unicode.ToLower(rune(buff1[i])))
+				}
+			}
+
 			if strings.Contains(string(string(buff2)+string(buff1)), str) {
 				return true
 			}
 		} else {
 			buff = 1
 			_, readErr = f.Read(buff2)
+
+			if !caseSensitive {
+				for i := 0; i < bsize; i++ {
+					buff2[i] = byte(unicode.ToLower(rune(buff2[i])))
+				}
+			}
 
 			if strings.Contains(string(string(buff1)+string(buff2)), str) {
 				return true

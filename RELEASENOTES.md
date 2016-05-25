@@ -1,5 +1,9 @@
 # Release Notes
 
+## Next Release
+
+* Added "ignorecase" keyword for case-insensitive string comparisons.
+
 ## 1.0.0
 
 * Defaults to the current directory when the location clause is not present in the expression.

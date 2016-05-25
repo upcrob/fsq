@@ -46,6 +46,7 @@ The set of conditions tells `fsq` what files it should print out as matches.  In
 * isdir (this operator does not take any arguments)
 * isfile (this operator does not take any arguments)
 * contains
+* ignorecase (must be followed by '=', '!=', 'startswith', 'endswith', or 'contains')
 
 ### Logic Operators
 

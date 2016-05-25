@@ -28,6 +28,7 @@ var keywordMappings map[int]string = map[int]string{
 	G:          "g",
 	STARTSWITH: "startswith",
 	ENDSWITH:   "endswith",
+	IGNORECASE: "ignorecase",
 }
 
 func (lexer *Lexer) Lex(lval *yySymType) int {

@@ -1,15 +1,15 @@
 package main
 
 func isContentContainsExpression(n *tnode) bool {
-	return n.ntype == T_CONTAINS && left(n).ntype == T_CONTENT
+	return (n.ntype == T_CONTAINS || n.ntype == T_ICCONTAINS) && left(n).ntype == T_CONTENT
 }
 
 func isContentStartswithExpression(n *tnode) bool {
-	return n.ntype == T_STARTSWITH && left(n).ntype == T_CONTENT
+	return (n.ntype == T_STARTSWITH || n.ntype == T_ICSTARTSWITH) && left(n).ntype == T_CONTENT
 }
 
 func isContentEndswithExpression(n *tnode) bool {
-	return n.ntype == T_ENDSWITH && left(n).ntype == T_CONTENT
+	return (n.ntype == T_ENDSWITH || n.ntype == T_ICENDSWITH) && left(n).ntype == T_CONTENT
 }
 
 /*
