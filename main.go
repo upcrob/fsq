@@ -32,6 +32,9 @@ func main() {
 		os.Exit(1)
 	}
 
+	// validate parse tree
+	validateTree(programRoot.children[3])
+
 	// parse tree optimizations
 	shiftExpressionRight(programRoot.children[3], isContentStartswithExpression)
 	shiftExpressionRight(programRoot.children[3], isContentEndswithExpression)

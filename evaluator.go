@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -126,10 +125,6 @@ func resolveAsInt(n *tnode, info os.FileInfo) int {
 		if err == nil {
 			return int(d.Unix())
 		}
-		fmt.Println("Failed to parse string value: '" + n.sval +
-			"'. If this is a date/time, be sure to follow one of the following two formats exactly: " +
-			"\"" + TIMESTAMP_FORMAT + "\", \"" + DATE_FORMAT + "\"")
-		os.Exit(1)
 	} else if n.ntype == T_MODIFIED {
 		_, zone := info.ModTime().Zone()
 		modtime := int(info.ModTime().Unix()) + zone
