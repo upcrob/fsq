@@ -23,6 +23,11 @@ func validateTree(n *tnode) {
             if r != T_STRING {
                 fail()
             }
+
+            if parent == T_LT || parent == T_LTE ||
+                    parent == T_GT || parent == T_GTE {
+                fail()
+            }
         } else if l == T_SIZE {
             if r != T_INTEGER {
                 fail()
