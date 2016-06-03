@@ -1,8 +1,6 @@
 name=fsq
 
-build:
-	go tool yacc parser.y
-
+build: test
 	rm -Rf bin
 	mkdir bin
 
@@ -19,6 +17,10 @@ build:
 install:
 	go tool yacc parser.y
 	go install
+
+test:
+	go tool yacc parser.y
+	go test
 
 clean:
 	rm -f y.go y.output
