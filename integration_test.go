@@ -62,7 +62,7 @@ func TestStartswithIgnorecase(t *testing.T) {
 
 func TestIsfile(t *testing.T) {
 	out := run("name in 'testdata/sub2' where isfile")
-	expect(t, out, "a\nb\nc")
+	expect(t, out, "a\nb\nc\nd")
 }
 
 func TestIsdir(t *testing.T) {
@@ -117,7 +117,7 @@ func TestCompoundSelect(t *testing.T) {
 
 func TestOrExpression(t *testing.T) {
 	out := run("name in 'testdata/sub2' where isfile or isdir")
-	expect(t, out, "a\nb\ndir1/\nc\ndir2/")
+	expect(t, out, "a\nb\ndir1/\nc\ndir2/\nd")
 }
 
 func TestAndExpression(t *testing.T) {
