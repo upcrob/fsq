@@ -18,8 +18,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	execute_expression(os.Args[1])
+}
+
+func execute_expression(expr string) {
 	lexer := new(Lexer)
-	lexer.expr = os.Args[1]
+	lexer.expr = expr
 	yyParse(lexer)
 
 	if programRoot == nil {
@@ -47,7 +51,8 @@ func main() {
 func eval(path string, file os.FileInfo, err error) error {
 	if file == nil {
 		return nil
-	} else if path == "." {
+	} else if path == programRoot.children[2].sval {
+		// exclude root directory
 		return nil
 	}
 

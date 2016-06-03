@@ -3,7 +3,7 @@
 ## Next Release
 
 * Added "ignorecase" keyword for case-insensitive string comparisons.
-* Removed the '.' directory from search results.
+* Removed the root search directory from results.
 * Expression validation fixes.
 
 ## 1.0.0
