@@ -9,7 +9,7 @@ import (
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
 const DATE_FORMAT = "01/02/2006"
-const VERSION = "1.0.0"
+const VERSION = "1.1.0"
 
 func main() {
 	if len(os.Args) != 2 {

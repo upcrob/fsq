@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.1.0
 
 * Added "ignorecase" keyword for case-insensitive string comparisons.
 * Removed the root search directory from results.
