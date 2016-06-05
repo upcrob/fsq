@@ -47,7 +47,7 @@ func TestEndswith(t *testing.T) {
 
 func TestEndswithIgnorecase(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name ignorecase endswith '.TxT'")
-	expect(t, out, "Test.Txt\ntest.txt\ntest2.txt")
+	expect(t, out, "Test3.Txt\ntest.txt\ntest2.txt")
 }
 
 func TestStartswith(t *testing.T) {
@@ -57,7 +57,7 @@ func TestStartswith(t *testing.T) {
 
 func TestStartswithIgnorecase(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name ignorecase startswith 'Test'")
-	expect(t, out, "Test.Txt\ntest.txt\ntest2.txt")
+	expect(t, out, "Test3.Txt\ntest.txt\ntest2.txt")
 }
 
 func TestIsfile(t *testing.T) {
@@ -77,7 +77,7 @@ func TestNameEq(t *testing.T) {
 
 func TestNameNeq(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name != 'test.txt'")
-	expect(t, out, "Test.Txt\ntest2.txt")
+	expect(t, out, "Test3.Txt\ntest2.txt")
 }
 
 func TestNameContains(t *testing.T) {
@@ -87,7 +87,7 @@ func TestNameContains(t *testing.T) {
 
 func TestNameContainsIgnorecase(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name ignorecase contains 'Test'")
-	expect(t, out, "Test.Txt\ntest.txt\ntest2.txt")
+	expect(t, out, "Test3.Txt\ntest.txt\ntest2.txt")
 }
 
 func TestContentContains(t *testing.T) {
@@ -97,12 +97,14 @@ func TestContentContains(t *testing.T) {
 
 func TestContentContainsIgnorecase(t *testing.T) {
 	out := run("name in 'testdata/sub1' where content ignorecase contains 'some'")
-	expect(t, out, "Test.Txt\ntest.txt\ntest2.txt")
+	expect(t, out, "Test3.Txt\ntest.txt\ntest2.txt")
 }
 
 func TestPathExtraction(t *testing.T) {
 	out := run("path in 'testdata/sub1' where name = 'test.txt'")
-	expect(t, out, "testdata/sub1/test.txt")
+	if out != "testdata/sub1/test.txt" && out != "testdata\\sub1\\test.txt" {
+		t.Error("\nexpected:\n" + "testdata/sub1/test.txt\n\ngot:\n" + out)
+	}
 }
 
 func TestSizeExtraction(t *testing.T) {
@@ -127,10 +129,10 @@ func TestAndExpression(t *testing.T) {
 
 func TestNotExpression(t *testing.T) {
 	out := run("name in 'testdata/sub1' where not name startswith 'test'")
-	expect(t, out, "Test.Txt")
+	expect(t, out, "Test3.Txt")
 }
 
 func TestCompoundExpression(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name startswith 'T' or (name startswith 't' and not name contains '2')")
-	expect(t, out, "Test.Txt\ntest.txt")
+	expect(t, out, "Test3.Txt\ntest.txt")
 }
