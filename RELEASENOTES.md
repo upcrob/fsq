@@ -1,5 +1,9 @@
 # Release Notes
 
+## Next Release
+
+* Fixed slash character mixing in output.
+
 ## 1.1.0
 
 * Added "ignorecase" keyword for case-insensitive string comparisons.

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
@@ -80,7 +81,7 @@ func printRelevant(path string, file os.FileInfo) {
 		if file.IsDir() {
 			path += "/"
 		}
-		fmt.Print(path)
+		fmt.Print(forwardSlashes(path))
 	}
 
 	fmt.Println()
@@ -112,4 +113,8 @@ func pad(str string, size int) string {
 		str += " "
 	}
 	return str
+}
+
+func forwardSlashes(path string) string {
+	return strings.Replace(path, "\\", "/", -1)
 }
