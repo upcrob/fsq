@@ -3,6 +3,7 @@
 ## Next Release
 
 * Fixed slash character mixing in output.
+* Improved performance due to parallel file evaluation.
 
 ## 1.1.0
 

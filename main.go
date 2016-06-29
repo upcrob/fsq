@@ -6,11 +6,24 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
 const DATE_FORMAT = "01/02/2006"
 const VERSION = "1.1.0"
+
+type result struct {
+	order int
+	matched bool
+	path string
+	file os.FileInfo
+}
+
+var evalGroup sync.WaitGroup
+var printGroup sync.WaitGroup
+var resultChannel chan *result
+var count int
 
 func main() {
 	if len(os.Args) != 2 {
@@ -18,11 +31,13 @@ func main() {
 		fmt.Println("usage: fsq <expression>")
 		os.Exit(1)
 	}
-
 	execute_expression(os.Args[1])
 }
 
 func execute_expression(expr string) {
+	count = 0
+	resultChannel = make(chan *result)
+
 	lexer := new(Lexer)
 	lexer.expr = expr
 	yyParse(lexer)
@@ -45,8 +60,16 @@ func execute_expression(expr string) {
 	shiftExpressionRight(programRoot.children[3], isContentEndswithExpression)
 	shiftExpressionRight(programRoot.children[3], isContentContainsExpression)
 
+	// start print routine, this will print out the results sent from
+	// doEval() via resultChannel
+	go printRoutine()
+	printGroup.Add(1)
+
 	// walk file system
 	filepath.Walk(programRoot.children[2].sval, eval)
+	evalGroup.Wait()
+	resultChannel <- nil
+	printGroup.Wait()
 }
 
 func eval(path string, file os.FileInfo, err error) error {
@@ -57,10 +80,58 @@ func eval(path string, file os.FileInfo, err error) error {
 		return nil
 	}
 
-	if evaluate(path, file, programRoot.children[3]) {
-		printRelevant(path, file)
-	}
+	evalGroup.Add(1)
+	go doEval(path, file, programRoot.children[3], count)
+	count++
 	return nil
+}
+
+func doEval(path string, file os.FileInfo, n *tnode, order int) {
+	res := new(result)
+	res.order = order
+	if evaluate(path, file, n) {
+		res.matched = true
+		res.path = path
+		res.file = file
+	} else {
+		res.matched = false
+	}
+	resultChannel <- res
+	evalGroup.Done()
+}
+
+func printRoutine() {
+	current := 0
+	cache := make(map[int]*result)
+	for {
+		res := <- resultChannel
+		if res == nil {
+			break
+		}
+
+		if res.order == current {
+			if res.matched {
+				// this is the next item to print out, print it
+				printRelevant(res.path, res.file)
+			}
+			current++
+
+			// print subsequent items available in the cache
+			cached := cache[current]
+			for cached != nil {
+				if cached.matched {
+					printRelevant(cached.path, cached.file)
+				}
+				delete(cache, current)
+				current++
+				cached = cache[current]
+			}
+		} else {
+			// store the item in the cache
+			cache[res.order] = res
+		}
+	}
+	printGroup.Done()
 }
 
 func printRelevant(path string, file os.FileInfo) {
