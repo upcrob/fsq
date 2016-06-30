@@ -11,13 +11,13 @@ import (
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
 const DATE_FORMAT = "01/02/2006"
-const VERSION = "1.1.0"
+const VERSION = "1.2.0"
 
 type result struct {
-	order int
+	order   int
 	matched bool
-	path string
-	file os.FileInfo
+	path    string
+	file    os.FileInfo
 }
 
 var evalGroup sync.WaitGroup
@@ -104,7 +104,7 @@ func printRoutine() {
 	current := 0
 	cache := make(map[int]*result)
 	for {
-		res := <- resultChannel
+		res := <-resultChannel
 		if res == nil {
 			break
 		}

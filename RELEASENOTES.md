@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.2.0
 
 * Fixed slash character mixing in output.
 * Improved performance due to parallel file evaluation.
