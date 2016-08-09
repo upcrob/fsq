@@ -89,9 +89,10 @@ func eval(path string, file os.FileInfo, err error) error {
 func doEval(path string, file os.FileInfo, n *tnode, order int) {
 	res := new(result)
 	res.order = order
-	if evaluate(path, file, n) {
+	normalizedPath := forwardSlashes(path)
+	if evaluate(normalizedPath, file, n) {
 		res.matched = true
-		res.path = path
+		res.path = normalizedPath
 		res.file = file
 	} else {
 		res.matched = false
@@ -152,7 +153,7 @@ func printRelevant(path string, file os.FileInfo) {
 		if file.IsDir() {
 			path += "/"
 		}
-		fmt.Print(forwardSlashes(path))
+		fmt.Print(path)
 	}
 
 	fmt.Println()

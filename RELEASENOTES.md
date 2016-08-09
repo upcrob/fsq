@@ -1,5 +1,9 @@
 # Release Notes
 
+## Next Release
+
+* Fixed file path normalization bug on Windows.
+
 ## 1.2.0
 
 * Fixed slash character mixing in output.
