@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.2.1
 
 * Fixed file path normalization bug on Windows.
 

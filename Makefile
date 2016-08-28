@@ -1,5 +1,5 @@
 name=fsq
-version=1.2.0
+version=1.2.1
 
 build: test
 	rm -Rf bin
