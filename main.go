@@ -66,7 +66,13 @@ func execute_expression(expr string) {
 	printGroup.Add(1)
 
 	// walk file system
-	filepath.Walk(programRoot.children[2].sval, eval)
+	// the grammar causes reverses the list of root directories,
+	// so we have to walk the list in reverse
+	rootList := programRoot.children[2].children
+	for i := len(rootList) - 1; i >= 0; i-- {
+		root := rootList[i].sval
+		filepath.Walk(root, eval)
+	}
 	evalGroup.Wait()
 	resultChannel <- nil
 	printGroup.Wait()
@@ -75,9 +81,14 @@ func execute_expression(expr string) {
 func eval(path string, file os.FileInfo, err error) error {
 	if file == nil {
 		return nil
-	} else if path == programRoot.children[2].sval {
-		// exclude root directory
-		return nil
+	}
+
+	rootList := programRoot.children[2].children
+	for i := 0; i < len(rootList); i++ {
+		if path == rootList[i].sval {
+			// exclude root directory
+			return nil
+		}
 	}
 
 	evalGroup.Add(1)

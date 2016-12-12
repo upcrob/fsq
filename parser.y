@@ -43,7 +43,7 @@
 %token NEQ
 %token <ival> INTEGER
 
-%type <tval> attribute attribute_list location or_expr and_expr not_expr logic_expr value program
+%type <tval> attribute attribute_list string_list location or_expr and_expr not_expr logic_expr value program
 
 // ========================================================
 // BEGIN GRAMMAR
@@ -52,15 +52,12 @@
 %%
 
 program:
-	attribute_list location STRING WHERE or_expr EOF {
+	attribute_list location string_list WHERE or_expr EOF {
 		programRoot = new(tnode)
 		programRoot.ntype = T_PROGRAM
 		addChild(programRoot, $1)
 		addChild(programRoot, $2)
-		n := new(tnode)
-		n.ntype = T_STRING
-		n.sval = $3
-		addChild(programRoot, n)
+		addChild(programRoot, $3)
 		addChild(programRoot, $5)
 	}
 	| attribute_list WHERE or_expr EOF {
@@ -69,11 +66,14 @@ program:
 		addChild(programRoot, $1)
 		loc := new(tnode)
 		loc.ntype = T_IN
+		locList := new(tnode)
+		loc.ntype = T_SLIST
 		locPath := new(tnode)
 		locPath.ntype = T_STRING
 		locPath.sval = "."
+		addChild(locList, locPath)
 		addChild(programRoot, loc)
-		addChild(programRoot, locPath)
+		addChild(programRoot, locList)
 		addChild(programRoot, $3)
 	}
 	;
@@ -255,6 +255,28 @@ attribute_list:
 	| attribute COMMA attribute_list {
 		$$ = $3
 		addChild($3, $1)
+	}
+	;
+
+string_list:
+	STRING {
+		n := new(tnode)
+		n.ntype = T_SLIST
+
+		s := new(tnode)
+		s.ntype = T_STRING
+		s.sval = $1
+
+		addChild(n, s)
+		$$ = n
+	}
+	| STRING COMMA string_list {
+		s := new(tnode)
+		s.ntype = T_STRING
+		s.sval = $1
+
+		addChild($3, s)
+		$$ = $3
 	}
 	;
 

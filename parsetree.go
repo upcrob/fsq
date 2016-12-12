@@ -36,6 +36,7 @@ const (
 	T_NEQ
 	T_ICNEQ
 	T_STRING
+	T_SLIST
 )
 
 type tnode struct {
@@ -89,6 +90,8 @@ func nodeString(treeNode *tnode) string {
 		return "INTEGER (" + strconv.Itoa(treeNode.ival) + ")"
 	case T_STRING:
 		return "STRING (\"" + treeNode.sval + "\")"
+	case T_SLIST:
+		return "STRING LIST"
 	case T_CONTAINS:
 		return "CONTAINS"
 	case T_ICCONTAINS:

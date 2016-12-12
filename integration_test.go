@@ -136,3 +136,8 @@ func TestCompoundExpression(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name startswith 'T' or (name startswith 't' and not name contains '2')")
 	expect(t, out, "Test3.Txt\ntest.txt")
 }
+
+func TestMultipleRoots(t *testing.T) {
+	out := run("name in 'testdata/sub1', 'testdata/sub3' where name endswith '.txt'")
+	expect(t, out, "test.txt\ntest2.txt\ntest4.txt")
+}
