@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.3.0
+
+* Added support for searching multiple root directories.
+
 ## 1.2.1
 
 * Fixed file path normalization bug on Windows.
