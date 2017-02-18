@@ -16,12 +16,15 @@ build: test
 	export GOOS=freebsd; export GOARCH=386; go build -o bin/$(name)-$(version)-freebsd-386
 
 install:
-	go tool yacc parser.y
+	goyacc parser.y
 	go install
 
 test:
-	go tool yacc parser.y
+	goyacc parser.y
 	go test
+
+installyacc:
+	go get golang.org/x/tools/cmd/goyacc
 
 clean:
 	rm -f y.go y.output
