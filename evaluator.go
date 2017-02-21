@@ -6,15 +6,15 @@ import (
 	"time"
 )
 
-func evaluate(path string, info os.FileInfo, n *tnode) bool {
+func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch) bool {
 	if n.ntype == T_STARTSWITH {
-		return startsWith(path, left(n), info, right(n).sval, true)
+		return startsWith(fileSearch, left(n), info, right(n).sval, true)
 	} else if n.ntype == T_ICSTARTSWITH {
-		return startsWith(path, left(n), info, right(n).sval, false)
+		return startsWith(fileSearch, left(n), info, right(n).sval, false)
 	} else if n.ntype == T_ENDSWITH {
-		return endsWith(path, left(n), info, right(n).sval, true)
+		return endsWith(fileSearch, left(n), info, right(n).sval, true)
 	} else if n.ntype == T_ICENDSWITH {
-		return endsWith(path, left(n), info, right(n).sval, false)
+		return endsWith(fileSearch, left(n), info, right(n).sval, false)
 	} else if n.ntype == T_GT {
 		if resolveAsInt(left(n), info) > resolveAsInt(right(n), info) {
 			return true
@@ -80,23 +80,23 @@ func evaluate(path string, info os.FileInfo, n *tnode) bool {
 			}
 		}
 	} else if n.ntype == T_OR {
-		if evaluate(path, info, left(n)) || evaluate(path, info, right(n)) {
+		if evaluate(path, info, left(n), fileSearch) || evaluate(path, info, right(n), fileSearch) {
 			return true
 		}
 	} else if n.ntype == T_AND {
-		if evaluate(path, info, left(n)) && evaluate(path, info, right(n)) {
+		if evaluate(path, info, left(n), fileSearch) && evaluate(path, info, right(n), fileSearch) {
 			return true
 		}
 	} else if n.ntype == T_NOT {
-		return !evaluate(path, info, left(n))
+		return !evaluate(path, info, left(n), fileSearch)
 	} else if n.ntype == T_ISFILE {
 		return !info.IsDir()
 	} else if n.ntype == T_ISDIR {
 		return info.IsDir()
 	} else if n.ntype == T_CONTAINS {
-		return contains(left(n).ntype, right(n).sval, path, info, true)
+		return contains(left(n).ntype, right(n).sval, fileSearch, info, true)
 	} else if n.ntype == T_ICCONTAINS {
-		return contains(left(n).ntype, right(n).sval, path, info, false)
+		return contains(left(n).ntype, right(n).sval, fileSearch, info, false)
 	}
 	return false
 }
@@ -133,7 +133,7 @@ func resolveAsInt(n *tnode, info os.FileInfo) int {
 	return 0
 }
 
-func contains(ntype int, search string, path string, info os.FileInfo, caseSensitive bool) bool {
+func contains(ntype int, search string, fileSearch *FileSearch, info os.FileInfo, caseSensitive bool) bool {
 	if !caseSensitive {
 		search = strings.ToLower(search)
 	}
@@ -147,25 +147,26 @@ func contains(ntype int, search string, path string, info os.FileInfo, caseSensi
 		}
 		return strings.Contains(name, search)
 	} else if ntype == T_PATH {
+		path := fileSearch.path
 		if !caseSensitive {
 			path = strings.ToLower(path)
 		}
 		return strings.Contains(path, search)
 	} else if ntype == T_CONTENT {
-		return !info.IsDir() && fileContainsString(path, search, caseSensitive)
+		return !info.IsDir() && fileContainsString(fileSearch, info, search, caseSensitive)
 	}
 	return false
 }
 
-func startsWith(path string, n *tnode, info os.FileInfo, search string, caseSensitive bool) bool {
+func startsWith(fileSearch *FileSearch, n *tnode, info os.FileInfo, search string, caseSensitive bool) bool {
 	if !caseSensitive {
 		search = strings.ToLower(search)
 	}
 
 	if n.ntype == T_CONTENT {
-		return fileStartsWithString(path, search, caseSensitive)
+		return fileStartsWithString(fileSearch.path, search, caseSensitive)
 	} else {
-		operandValue := resolveAsString(path, n, info)
+		operandValue := resolveAsString(fileSearch.path, n, info)
 		if !caseSensitive {
 			operandValue = strings.ToLower(operandValue)
 		}
@@ -173,15 +174,15 @@ func startsWith(path string, n *tnode, info os.FileInfo, search string, caseSens
 	}
 }
 
-func endsWith(path string, n *tnode, info os.FileInfo, search string, caseSensitive bool) bool {
+func endsWith(fileSearch *FileSearch, n *tnode, info os.FileInfo, search string, caseSensitive bool) bool {
 	if !caseSensitive {
 		search = strings.ToLower(search)
 	}
 
 	if n.ntype == T_CONTENT {
-		return fileEndsWithString(path, info, search, caseSensitive)
+		return fileEndsWithString(fileSearch.path, info, search, caseSensitive)
 	} else {
-		operandValue := resolveAsString(path, n, info)
+		operandValue := resolveAsString(fileSearch.path, n, info)
 		if !caseSensitive {
 			operandValue = strings.ToLower(operandValue)
 		}

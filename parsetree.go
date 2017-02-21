@@ -76,6 +76,31 @@ func printTreeHelper(n *tnode, depth int) {
 	}
 }
 
+func collectFileSearchStrings(n *tnode) []SearchString {
+	searchStrings := make([]SearchString, 0, 5)
+	if n.ntype == T_CONTAINS ||
+			n.ntype == T_STARTSWITH ||
+			n.ntype == T_ENDSWITH {
+		if n.children[0].ntype == T_CONTENT {
+			searchStrings = append(searchStrings, SearchString{n.children[1].sval, true})
+		}
+	} else if n.ntype == T_ICCONTAINS ||
+	 		n.ntype == T_ICSTARTSWITH ||
+			n.ntype == T_ICENDSWITH {
+		if n.children[0].ntype == T_CONTENT {
+			searchStrings = append(searchStrings, SearchString{n.children[1].sval, false})
+		}
+	} else {
+		for _, c := range n.children {
+			rec := collectFileSearchStrings(c)
+			for _, s := range rec {
+				searchStrings = append(searchStrings, s)
+			}
+		}
+	}
+	return searchStrings
+}
+
 func nodeString(treeNode *tnode) string {
 	switch treeNode.ntype {
 	case T_PROGRAM:

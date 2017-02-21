@@ -3,8 +3,126 @@ package main
 import (
 	"os"
 	"strings"
-	"unicode"
 )
+
+const DEFAULT_BLOCK_SIZE = 1024
+
+type SearchString struct {
+	str string
+	caseSensitive bool
+}
+
+type FileSearch struct {
+	file *os.File
+	path string
+	buff1 []byte
+	buff1Len int
+	buff2 []byte
+	buff2Len int
+	blockSize int
+	blocksRead int
+	closed bool
+	searchStrings []SearchString
+	contains []SearchString
+}
+
+func newFileSearch(searchStrings []SearchString, path string) *FileSearch {
+	max := 0
+	for i := 0; i < len(searchStrings); i++ {
+		if len(searchStrings[i].str) > max {
+			max = len(searchStrings[i].str)
+		}
+	}
+
+	fs := new(FileSearch)
+	fs.path = path
+	fs.closed = false
+	fs.searchStrings = searchStrings
+	fs.blocksRead = 0
+	fs.contains = make([]SearchString, 0, 5)
+	if max > DEFAULT_BLOCK_SIZE {
+		fs.blockSize = max
+	} else {
+		fs.blockSize = DEFAULT_BLOCK_SIZE
+	}
+	fs.buff1 = make([]byte, fs.blockSize)
+	fs.buff2 = make([]byte, fs.blockSize)
+	return fs
+}
+
+func updateSearch(fs *FileSearch, info os.FileInfo) {
+	if fs.closed {
+		// this search has been closed, return
+		return
+	} else if fs.file == nil {
+		// the file has not been opened yet, open it
+		var err error
+		fs.file, err = os.Open(fs.path)
+		if err != nil {
+			// something went wrong, mark the search as closed
+			fs.closed = true
+			return
+		}
+	}
+
+	// read bytes
+	var bytesRead int
+	var err error
+	// alternate between byte buffers
+	if fs.blocksRead % 2 == 1 {
+		bytesRead, err = fs.file.Read(fs.buff1)
+		fs.buff1Len = bytesRead
+	} else {
+		bytesRead, err = fs.file.Read(fs.buff2)
+		fs.buff2Len = bytesRead
+	}
+	if err != nil {
+		fs.closed = true
+		return
+	} else if int64(fs.blocksRead * fs.blockSize + bytesRead) == info.Size() {
+		defer fs.file.Close()
+		fs.closed = true
+	}
+
+	var sval string
+	if fs.blocksRead % 2 == 0 {
+		sval = string(fs.buff1[:fs.buff1Len]) + string(fs.buff2[:fs.buff2Len])
+	} else {
+		sval = string(fs.buff2[:fs.buff2Len]) + string(fs.buff1[:fs.buff1Len])
+	}
+	svalLower := strings.ToLower(sval)
+	fs.blocksRead++
+
+	// check for file containing target strings
+	for i := 0; i < len(fs.searchStrings); i++ {
+		if fs.searchStrings[i].caseSensitive {
+			if strings.Contains(sval, fs.searchStrings[i].str) {
+				fs.contains = append(fs.contains, fs.searchStrings[i])
+			}
+		} else {
+			if strings.Contains(svalLower, strings.ToLower(fs.searchStrings[i].str)) {
+				fs.contains = append(fs.contains, fs.searchStrings[i])
+			}
+		}
+	}
+}
+
+func fileContainsString(fs *FileSearch, info os.FileInfo, target string, caseSensitive bool) bool {
+	for !fs.closed && !searchStringExists(fs.contains, SearchString{target, caseSensitive}) {
+		updateSearch(fs, info)
+	}
+	return searchStringExists(fs.contains, SearchString{target, caseSensitive})
+}
+
+func searchStringExists(searchSlice []SearchString, searchString SearchString) bool {
+	for i := 0; i < len(searchSlice); i++ {
+		if searchSlice[i].caseSensitive == searchString.caseSensitive &&
+				searchSlice[i].str == searchString.str {
+			return true
+		}
+	}
+	return false
+}
 
 func fileStartsWithString(path string, str string, caseSensitive bool) bool {
 	f, err := os.Open(path)
@@ -57,52 +175,4 @@ func fileEndsWithString(path string, info os.FileInfo, str string, caseSensitive
 	}
 
 	return str == endValue
-
-}
-
-func fileContainsString(path string, str string, caseSensitive bool) bool {
-	bsize := len(str)
-	f, err := os.Open(path)
-	if err != nil {
-		return false
-	}
-	defer f.Close()
-
-	buff := 1
-	buff1 := make([]byte, bsize)
-	buff2 := make([]byte, bsize)
-
-	// read in a block
-	var readErr error = nil
-	for readErr == nil {
-		if buff == 1 {
-			buff = 2
-			_, readErr = f.Read(buff1)
-
-			if !caseSensitive {
-				for i := 0; i < bsize; i++ {
-					buff1[i] = byte(unicode.ToLower(rune(buff1[i])))
-				}
-			}
-
-			if strings.Contains(string(string(buff2)+string(buff1)), str) {
-				return true
-			}
-		} else {
-			buff = 1
-			_, readErr = f.Read(buff2)
-
-			if !caseSensitive {
-				for i := 0; i < bsize; i++ {
-					buff2[i] = byte(unicode.ToLower(rune(buff2[i])))
-				}
-			}
-
-			if strings.Contains(string(string(buff1)+string(buff2)), str) {
-				return true
-			}
-		}
-	}
-
-	return false
 }

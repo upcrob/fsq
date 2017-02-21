@@ -100,6 +100,21 @@ func TestContentContainsIgnorecase(t *testing.T) {
 	expect(t, out, "Test3.Txt\ntest.txt\ntest2.txt")
 }
 
+func TestContentEndswith(t *testing.T) {
+	out := run("name in 'testdata/sub1' where content endswith '2'")
+	expect(t, out, "test2.txt")
+}
+
+func TestContentEndswithWithContains(t *testing.T) {
+	out := run("name in 'testdata/sub1' where content contains 'data' and content endswith '2'")
+	expect(t, out, "test2.txt")
+}
+
+func TestContentStartsContainsAndEnds(t *testing.T) {
+	out := run("name in 'testdata/sub1' where content startswith 'some' and content contains 'data' and content endswith '2'")
+	expect(t, out, "test2.txt")
+}
+
 func TestPathExtraction(t *testing.T) {
 	out := run("path in 'testdata/sub1' where name = 'test.txt'")
 	if out != "testdata/sub1/test.txt" && out != "testdata\\sub1\\test.txt" {

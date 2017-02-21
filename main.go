@@ -24,6 +24,7 @@ var evalGroup sync.WaitGroup
 var printGroup sync.WaitGroup
 var resultChannel chan *result
 var count int
+var searchStrings []SearchString
 
 func main() {
 	if len(os.Args) != 2 {
@@ -55,10 +56,11 @@ func execute_expression(expr string) {
 	// validate parse tree
 	validateTree(programRoot.children[3])
 
-	// parse tree optimizations
-	shiftExpressionRight(programRoot.children[3], isContentStartswithExpression)
-	shiftExpressionRight(programRoot.children[3], isContentEndswithExpression)
-	shiftExpressionRight(programRoot.children[3], isContentContainsExpression)
+	// parse tree optimization
+	shiftShortestPathLeft(programRoot.children[3])
+
+	// collect any strings to search files for preemptively
+	searchStrings = collectFileSearchStrings(programRoot.children[3])
 
 	// start print routine, this will print out the results sent from
 	// doEval() via resultChannel
@@ -98,10 +100,12 @@ func eval(path string, file os.FileInfo, err error) error {
 }
 
 func doEval(path string, file os.FileInfo, n *tnode, order int) {
+	fileSearch := newFileSearch(searchStrings, path)
+
 	res := new(result)
 	res.order = order
 	normalizedPath := forwardSlashes(path)
-	if evaluate(normalizedPath, file, n) {
+	if evaluate(normalizedPath, file, n, fileSearch) {
 		res.matched = true
 		res.path = normalizedPath
 		res.file = file
