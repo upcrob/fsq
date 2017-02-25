@@ -15,16 +15,17 @@ build: test
 	export GOOS=freebsd; export GOARCH=amd64; go build -o bin/$(name)-$(version)-freebsd-amd64
 	export GOOS=freebsd; export GOARCH=386; go build -o bin/$(name)-$(version)-freebsd-386
 
-install:
+install: installyacc
 	goyacc parser.y
 	go install
 
-test:
+test: installyacc
 	goyacc parser.y
 	go test
 
 installyacc:
 	go get golang.org/x/tools/cmd/goyacc
+	go install golang.org/x/tools/cmd/goyacc
 
 clean:
 	rm -f y.go y.output
