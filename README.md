@@ -76,5 +76,6 @@ The `go` compiler is required to build `fsq`.  If you have `make` installed, `fs
 Otherwise, the following commands will need to be run while in the `fsq` directory:
 
 	go get golang.org/x/tools/cmd/goyacc
+	go install golang.org/x/tools/cmd/goyacc
 	goyacc parser.y
 	go install
