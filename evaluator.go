@@ -151,7 +151,7 @@ func contains(ntype int, search string, fileSearch *FileSearch, info os.FileInfo
 		if !caseSensitive {
 			path = strings.ToLower(path)
 		}
-		return strings.Contains(path, search)
+		return strings.Contains(forwardSlashes(path), search)
 	} else if ntype == T_CONTENT {
 		return !info.IsDir() && fileContainsString(fileSearch, info, search, caseSensitive)
 	}
@@ -170,7 +170,7 @@ func startsWith(fileSearch *FileSearch, n *tnode, info os.FileInfo, search strin
 		if !caseSensitive {
 			operandValue = strings.ToLower(operandValue)
 		}
-		return strings.HasPrefix(operandValue, search)
+		return strings.HasPrefix(forwardSlashes(operandValue), search)
 	}
 }
 
@@ -186,6 +186,6 @@ func endsWith(fileSearch *FileSearch, n *tnode, info os.FileInfo, search string,
 		if !caseSensitive {
 			operandValue = strings.ToLower(operandValue)
 		}
-		return strings.HasSuffix(operandValue, search)
+		return strings.HasSuffix(forwardSlashes(operandValue), search)
 	}
 }

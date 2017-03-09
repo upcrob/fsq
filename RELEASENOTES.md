@@ -4,6 +4,7 @@
 
 * Changed build to use Go 1.8.  Go 1.8 removed the built-in yacc tool, so the external tool must now be downloaded prior to or as part of the build process.
 * Optimized file content search.
+* Fixed bug for path contains, startswith, and endswith searches on Windows.
 
 ## 1.3.0
 
