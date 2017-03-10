@@ -8,7 +8,7 @@ The `fsq` ('file system query' - pronounced, 'fisk') utility is a tool for doing
 
 Download the binary for your platform and add it to your command line path.
 
-[![Download](https://api.bintray.com/packages/upcrob/generic/fsq/images/download.svg)](https://bintray.com/upcrob/generic/fsq/_latestVersion)
+[![Download](https://api.bintray.com/packages/upcrob/generic/fsq/images/download.svg)](https://bintray.com/upcrob/generic/fsq/_latestVersion#files)
 
 ## Usage
 
