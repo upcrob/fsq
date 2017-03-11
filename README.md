@@ -12,31 +12,37 @@ Download the binary for your platform and add it to your command line path.
 
 ## Usage
 
-### Example Query
+### Query Structure
 
-`fsq` is designed to be quickly invoked from the command line.  For example, in order to find all files under the current directory that start with the characters 'hello' and are larger than 5 mb, the following query could be used:
+`fsq` takes a single argument: the expression.  This expression is composed of the following parts:
 
-	fsq "name in '.' where name startswith 'hello' and size > 5m"
+	<attribute list> in <locations> where <conditions>
 
-## Query Structure
+### Example Queries
 
-Notice that `fsq` takes a single argument: the expression.  This expression is composed of the following parts:
+To recursively find all files under the '/data' directory that start with the characters 'hello' and are larger than 5 mb, the following query could be used:
 
-	<attribute list> in <root directories> where <conditions>
+	fsq "name in '/data' where name startswith 'hello' and size > 5m"
 
-The attribute list specifies which attributes are printed to standard out by `fsq`.  In the above case, this is just the filename ('name').
+If the location (in the above case, '/data') is omitted, `fsq` will default to the current directory:
 
-The root directory tells `fsq` where to start searching in the file system.  Every directory under the root will be searched recursively for files matching the given conditions.  In the above case, it starts searching at the current directory ('.').  If you want to search multiple directories, separate them with commas.  Note that if the `in <location>` part of the expression is left out, it will default to the current directory.
+	fsq "name where name startswith 'hello' and size > 5m"
 
-The set of conditions tells `fsq` what files it should print out as matches.  In the above case, it looks for a name that *startswith* the string 'hello' and has a *size* on disk greater than 5 megabytes.
+Multiple locations can be specified as well:
+
+	fsq "name in '/opt', '/media' where size > 5m"
+
+The attribute list specifies which attributes are printed to standard out by `fsq`.  In the above case, this is just the filename ('name').  The following example will print both the path to the file and the size (in bytes):
+
+	fsq "path,size in '/opt' where size > 5m"
 
 ### Supported Attributes
 
 * name
 * path
 * size
-* content
-* modified
+* content (content can be queried, but cannot be added to the attribute list for printing)
+* modified (format: '01/02/2006' or '01/02/2006 15:04:05')
 
 ### Supported Conditional Operators
 
@@ -57,15 +63,19 @@ The set of conditions tells `fsq` what files it should print out as matches.  In
 
 Parentheses as well as the logical operators *or*, *and*, and *not* can be used to group conditions.  For example:
 
-	fsq "name in '.' where name startswith 'hello' or (isdir and name startswith 'world')"
+	fsq "name in '.' where name startswith 'hello' or (isdir and not name startswith 'world')"
 
 ### Size Qualifiers
 
 The following size qualifiers can be appended to integer values to indicate non-default units.  These are especially useful when specifying file sizes in expressions.  If no size qualifier is appended to an integer, `fsq` compares the value in bytes.
 
-* k - Kilo
-* m - Mega
-* g - Giga
+* k - Kilobytes
+* m - Megabytes
+* g - Gigabytes
+
+For example, to find all files greater than 10 kilobytes and less than 1 megabyte:
+
+	fsq "path where size > 10k and size < 1m"
 
 ## Building
 
