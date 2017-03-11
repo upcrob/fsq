@@ -11,7 +11,7 @@ import (
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
 const DATE_FORMAT = "01/02/2006"
-const VERSION = "1.3.0"
+const VERSION = "1.4.0"
 
 type result struct {
 	order   int
