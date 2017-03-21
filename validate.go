@@ -41,7 +41,7 @@ func validateTree(n *tnode) {
             _, terr := time.Parse(TIMESTAMP_FORMAT, right(n).sval)
             if derr != nil && terr != nil {
                 fmt.Println("invalid expression - expected modified time to be in one of the following formats: " +
-                    "\"" + TIMESTAMP_FORMAT + "\" or \"" + DATE_FORMAT + "\"")
+                    "\"" + TIMESTAMP_FORMAT_PATTERN + "\" or \"" + DATE_FORMAT_PATTERN + "\"")
                 os.Exit(1)
             }
         }

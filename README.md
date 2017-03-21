@@ -42,7 +42,7 @@ The attribute list specifies which attributes are printed to standard out by `fs
 * path
 * size
 * content (content can be queried, but cannot be added to the attribute list for printing)
-* modified (format: '01/02/2006' or '01/02/2006 15:04:05')
+* modified (format: 'MM/DD/YYYY' or 'MM/DD/YYYY hh:mm:ss')
 
 ### Supported Conditional Operators
 

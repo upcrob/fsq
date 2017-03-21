@@ -10,7 +10,9 @@ import (
 )
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
+const TIMESTAMP_FORMAT_PATTERN = "MM/DD/YYYY hh:mm:ss"
 const DATE_FORMAT = "01/02/2006"
+const DATE_FORMAT_PATTERN = "MM/DD/YYYY"
 const VERSION = "1.4.0"
 
 type result struct {
