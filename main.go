@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -27,12 +29,25 @@ var count int
 var searchStrings []SearchString
 
 func main() {
-	if len(os.Args) != 2 {
+	if len(os.Args) < 2 {
 		fmt.Println("fsq version " + VERSION)
 		fmt.Println("usage: fsq <expression>")
 		os.Exit(1)
 	}
-	execute_expression(os.Args[1])
+
+	if len(os.Args) == 2 {
+		execute_expression(os.Args[1])
+		return
+	}
+
+	buf := &bytes.Buffer{}
+	wr := bufio.NewWriter(buf)
+	for i := 1; i < len(os.Args); i++ {
+		wr.WriteString(os.Args[i])
+		wr.WriteString(" ")
+	}
+	wr.Flush()
+	execute_expression(buf.String())
 }
 
 func execute_expression(expr string) {
