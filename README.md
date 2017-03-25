@@ -46,18 +46,18 @@ The attribute list specifies which attributes are printed to standard out by `fs
 
 ### Supported Conditional Operators
 
-* <
-* <=
-* >
-* >=
-* =
-* !=
-* startswith
-* endswith
-* isdir (this operator does not take any arguments)
-* isfile (this operator does not take any arguments)
-* contains
-* ignorecase (must be followed by '=', '!=', 'startswith', 'endswith', or 'contains')
+* `<`
+* `<=`
+* `>`
+* `>=`
+* `=`
+* `!=`
+* `startswith`
+* `endswith`
+* `isdir` (this operator does not take any arguments)
+* `isfile` (this operator does not take any arguments)
+* `contains`
+* `ignorecase` (must be followed by '=', '!=', 'startswith', 'endswith', or 'contains')
 
 ### Logic Operators
 
