@@ -23,6 +23,7 @@ const (
 	T_ICENDSWITH
 	T_NAME
 	T_PATH
+	T_STATS
 	T_ISFILE
 	T_ISDIR
 	T_SIZE
@@ -80,14 +81,14 @@ func printTreeHelper(n *tnode, depth int) {
 func collectFileSearchStrings(n *tnode) []SearchString {
 	searchStrings := make([]SearchString, 0, 5)
 	if n.ntype == T_CONTAINS ||
-			n.ntype == T_STARTSWITH ||
-			n.ntype == T_ENDSWITH {
+		n.ntype == T_STARTSWITH ||
+		n.ntype == T_ENDSWITH {
 		if n.children[0].ntype == T_CONTENT {
 			searchStrings = append(searchStrings, SearchString{n.children[1].sval, true})
 		}
 	} else if n.ntype == T_ICCONTAINS ||
-	 		n.ntype == T_ICSTARTSWITH ||
-			n.ntype == T_ICENDSWITH {
+		n.ntype == T_ICSTARTSWITH ||
+		n.ntype == T_ICENDSWITH {
 		if n.children[0].ntype == T_CONTENT {
 			searchStrings = append(searchStrings, SearchString{strings.ToLower(n.children[1].sval), false})
 		}

@@ -15,6 +15,7 @@ var keywordMappings map[int]string = map[int]string{
 	ISFILE:     "isfile",
 	ISDIR:      "isdir",
 	PATH:       "path",
+	STATS:      "stats",
 	WHERE:      "where",
 	IN:         "in",
 	CONTAINS:   "contains",
@@ -118,6 +119,8 @@ func tokenString(symbolId int) string {
 		return "CPAREN"
 	case PATH:
 		return "PATH"
+	case STATS:
+		return "STATS"
 	default:
 		return "UNKNOWN"
 	}

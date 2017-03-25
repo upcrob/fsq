@@ -24,9 +24,12 @@ type result struct {
 
 var evalGroup sync.WaitGroup
 var printGroup sync.WaitGroup
+var countMutex sync.Mutex
 var resultChannel chan *result
 var count int
 var searchStrings []SearchString
+var matchCount int
+var sizeCount int64
 
 func main() {
 	if len(os.Args) != 2 {
@@ -39,6 +42,8 @@ func main() {
 
 func execute_expression(expr string) {
 	count = 0
+	matchCount = 0
+	sizeCount = 0
 	resultChannel = make(chan *result)
 
 	lexer := new(Lexer)
@@ -80,6 +85,17 @@ func execute_expression(expr string) {
 	evalGroup.Wait()
 	resultChannel <- nil
 	printGroup.Wait()
+
+	if attributeRequested(T_STATS) {
+		// print aggregate statistics
+		attribs := programRoot.children[0].children
+		if len(attribs) > 1 && matchCount > 0 {
+			// non-statistics output was printed, add a newline
+			fmt.Println()
+		}
+		fmt.Println("files: " + strconv.Itoa(matchCount))
+		fmt.Println("size: " + strconv.FormatInt(sizeCount, 10) + friendlySize(sizeCount))
+	}
 }
 
 func eval(path string, file os.FileInfo, err error) error {
@@ -111,6 +127,10 @@ func doEval(path string, file os.FileInfo, n *tnode, order int) {
 		res.matched = true
 		res.path = normalizedPath
 		res.file = file
+		countMutex.Lock()
+		matchCount++
+		sizeCount += file.Size()
+		countMutex.Unlock()
 	} else {
 		res.matched = false
 	}
@@ -153,13 +173,17 @@ func printRoutine() {
 }
 
 func printRelevant(path string, file os.FileInfo) {
+	anyRequested := false
 	if attributeRequested(T_MODIFIED) {
+		anyRequested = true
 		fmt.Print(file.ModTime().Format(TIMESTAMP_FORMAT) + "  ")
 	}
 	if attributeRequested(T_SIZE) {
+		anyRequested = true
 		fmt.Print(pad(strconv.Itoa(int(file.Size())), 11) + " ")
 	}
 	if attributeRequested(T_NAME) {
+		anyRequested = true
 		name := file.Name()
 		if file.IsDir() {
 			name += "/"
@@ -167,13 +191,16 @@ func printRelevant(path string, file os.FileInfo) {
 		fmt.Print(pad(name, 25) + " ")
 	}
 	if attributeRequested(T_PATH) {
+		anyRequested = true
 		if file.IsDir() {
 			path += "/"
 		}
 		fmt.Print(path)
 	}
 
-	fmt.Println()
+	if anyRequested {
+		fmt.Println()
+	}
 }
 
 func attributeRequested(ntype int) bool {
@@ -189,7 +216,8 @@ func attributeRequested(ntype int) bool {
 func validAttributesRequested() bool {
 	attribs := programRoot.children[0].children
 	for _, v := range attribs {
-		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE || v.ntype == T_MODIFIED) {
+		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE ||
+			v.ntype == T_MODIFIED || v.ntype == T_STATS) {
 			return false
 		}
 	}
@@ -206,4 +234,20 @@ func pad(str string, size int) string {
 
 func forwardSlashes(path string) string {
 	return strings.Replace(path, "\\", "/", -1)
+}
+
+func friendlySize(bytes int64) string {
+	if bytes <= 1000 {
+		return ""
+	}
+	fbytes := float64(bytes) / 1000.0
+	if fbytes <= 1000.0 {
+		return " (" + strconv.FormatFloat(fbytes, 'f', 1, 64) + " kb)"
+	}
+	fbytes /= 1000.0
+	if fbytes <= 1000.0 {
+		return " (" + strconv.FormatFloat(fbytes, 'f', 1, 64) + " mb)"
+	}
+	fbytes /= 1000.0
+	return " (" + strconv.FormatFloat(fbytes, 'f', 1, 64) + " gb)"
 }

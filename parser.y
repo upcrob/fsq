@@ -19,6 +19,7 @@
 %token <sval> NAME
 %token <ival> SIZE
 %token <sval> PATH
+%token STATS
 %token ISDIR
 %token ISFILE
 %token WHERE
@@ -292,6 +293,10 @@ attribute:
 	| PATH {
 		$$ = new(tnode)
 		$$.ntype = T_PATH
+	}
+	| STATS {
+		$$ = new(tnode)
+		$$.ntype = T_STATS
 	}
 	| CONTENT {
 		$$ = new(tnode)
