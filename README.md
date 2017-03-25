@@ -38,11 +38,11 @@ The attribute list specifies which attributes are printed to standard out by `fs
 
 ### Supported Attributes
 
-* name
-* path
-* size
-* content (content can be queried, but cannot be added to the attribute list for printing)
-* modified (format: 'MM/DD/YYYY' or 'MM/DD/YYYY hh:mm:ss')
+* `name`
+* `path`
+* `size`
+* `content` (content can be queried, but cannot be added to the attribute list for printing)
+* `modified` (format: 'MM/DD/YYYY' or 'MM/DD/YYYY hh:mm:ss')
 
 ### Supported Conditional Operators
 
