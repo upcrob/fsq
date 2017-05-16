@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -88,7 +89,7 @@ func collectFileSearchStrings(n *tnode) []SearchString {
 	 		n.ntype == T_ICSTARTSWITH ||
 			n.ntype == T_ICENDSWITH {
 		if n.children[0].ntype == T_CONTENT {
-			searchStrings = append(searchStrings, SearchString{n.children[1].sval, false})
+			searchStrings = append(searchStrings, SearchString{strings.ToLower(n.children[1].sval), false})
 		}
 	} else {
 		for _, c := range n.children {

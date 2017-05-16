@@ -100,6 +100,11 @@ func TestContentContainsIgnorecase(t *testing.T) {
 	expect(t, out, "Test3.Txt\ntest.txt\ntest2.txt")
 }
 
+func TestContentContainsIgnorecaseWithCaps(t *testing.T) {
+	out := run("name in 'testdata/sub1' where content ignorecase contains 'SOME'")
+	expect(t, out, "Test3.Txt\ntest.txt\ntest2.txt")
+}
+
 func TestContentEndswith(t *testing.T) {
 	out := run("name in 'testdata/sub1' where content endswith '2'")
 	expect(t, out, "test2.txt")

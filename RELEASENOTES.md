@@ -1,5 +1,9 @@
 # Release Notes
 
+## Next Release
+
+* Fixed bug where upper case characters in "content contains" searches were not handled properly.
+
 ## 1.4.0
 
 * Changed build to use Go 1.8.  Go 1.8 removed the built-in yacc tool, so the external tool must now be downloaded prior to or as part of the build process.
