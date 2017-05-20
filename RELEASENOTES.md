@@ -3,6 +3,7 @@
 ## Next Release
 
 * Fixed bug where upper case characters in "content contains" searches were not handled properly.
+* Added "stats" keyword for aggregate query statistics.
 
 ## 1.4.0
 
