@@ -1,7 +1,7 @@
 language: go
 go:
   - 1.8
-script: make
+script: make all
 deploy:
   provider: bintray
   file: bintray.json

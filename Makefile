@@ -1,10 +1,15 @@
 name=fsq
 version=1.4.0
 
-build: test
+build: genparser
+	go build
+
+install: genparser
+	go install
+
+all: test
 	rm -Rf bin
 	mkdir bin
-
 	export GOOS=darwin; export GOARCH=amd64; go build -o bin/$(name)-$(version)-osx-amd64
 	export GOOS=linux; export GOARCH=386; go build -o bin/$(name)-$(version)-linux-386
 	export GOOS=linux; export GOARCH=amd64; go build -o bin/$(name)-$(version)-linux-amd64
@@ -15,18 +20,16 @@ build: test
 	export GOOS=freebsd; export GOARCH=amd64; go build -o bin/$(name)-$(version)-freebsd-amd64
 	export GOOS=freebsd; export GOARCH=386; go build -o bin/$(name)-$(version)-freebsd-386
 
-install: installyacc
-	goyacc parser.y
-	go install
-
-test: installyacc
-	goyacc parser.y
+test: genparser
 	go test
+
+genparser: installyacc
+	goyacc parser.y
 
 installyacc:
 	go get golang.org/x/tools/cmd/goyacc
 	go install golang.org/x/tools/cmd/goyacc
 
 clean:
-	rm -f y.go y.output
+	rm -f y.go y.output fsq
 	rm -Rf bin
