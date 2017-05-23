@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.5.0
 
 * Fixed bug where upper case characters in "content contains" searches were not handled properly.
 * Added "stats" keyword for aggregate query statistics.
