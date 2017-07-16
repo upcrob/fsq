@@ -45,6 +45,9 @@ func validateTree(n *tnode) {
                 os.Exit(1)
             }
         }
+    } else if parent == T_FSIZE || parent == T_STATS {
+        fmt.Println("attribute cannot be queried: " + nodeString(n))
+        os.Exit(1)
     }
 
     if len(n.children) > 0 {

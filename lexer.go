@@ -12,6 +12,7 @@ type Lexer struct {
 var keywordMappings map[int]string = map[int]string{
 	NAME:       "name",
 	SIZE:       "size",
+	FSIZE:      "fsize",
 	ISFILE:     "isfile",
 	ISDIR:      "isdir",
 	PATH:       "path",

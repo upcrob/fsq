@@ -18,6 +18,7 @@
 %token <sval> STRING
 %token <sval> NAME
 %token <ival> SIZE
+%token <ival> FSIZE
 %token <sval> PATH
 %token STATS
 %token ISDIR
@@ -289,6 +290,10 @@ attribute:
 	| SIZE {
 		$$ = new(tnode)
 		$$.ntype = T_SIZE
+	}
+	| FSIZE {
+		$$ = new(tnode)
+		$$.ntype = T_FSIZE
 	}
 	| PATH {
 		$$ = new(tnode)

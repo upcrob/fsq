@@ -94,7 +94,13 @@ func execute_expression(expr string) {
 			fmt.Println()
 		}
 		fmt.Println("files: " + strconv.Itoa(matchCount))
-		fmt.Println("size: " + strconv.FormatInt(sizeCount, 10) + friendlySize(sizeCount))
+
+		fsize := friendlySize(sizeCount)
+		_, err := strconv.Atoi(fsize)
+		if err != nil {
+			fsize = strconv.FormatInt(sizeCount, 10) + " (" + fsize + ")"
+		}
+		fmt.Println("size: " + fsize)
 	}
 }
 
@@ -182,6 +188,10 @@ func printRelevant(path string, file os.FileInfo) {
 		anyRequested = true
 		fmt.Print(pad(strconv.Itoa(int(file.Size())), 11) + " ")
 	}
+	if attributeRequested(T_FSIZE) {
+		anyRequested = true
+		fmt.Print(pad(friendlySize(file.Size()), 6) + " ")
+	}
 	if attributeRequested(T_NAME) {
 		anyRequested = true
 		name := file.Name()
@@ -217,7 +227,7 @@ func validAttributesRequested() bool {
 	attribs := programRoot.children[0].children
 	for _, v := range attribs {
 		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE ||
-			v.ntype == T_MODIFIED || v.ntype == T_STATS) {
+			v.ntype == T_MODIFIED || v.ntype == T_STATS || v.ntype == T_FSIZE) {
 			return false
 		}
 	}
@@ -238,16 +248,16 @@ func forwardSlashes(path string) string {
 
 func friendlySize(bytes int64) string {
 	if bytes <= 1000 {
-		return ""
+		return strconv.Itoa(int(bytes))
 	}
 	fbytes := float64(bytes) / 1000.0
 	if fbytes <= 1000.0 {
-		return " (" + strconv.FormatFloat(fbytes, 'f', 1, 64) + " kb)"
+		return strconv.FormatFloat(fbytes, 'f', 1, 64) + "k"
 	}
 	fbytes /= 1000.0
 	if fbytes <= 1000.0 {
-		return " (" + strconv.FormatFloat(fbytes, 'f', 1, 64) + " mb)"
+		return strconv.FormatFloat(fbytes, 'f', 1, 64) + "m"
 	}
 	fbytes /= 1000.0
-	return " (" + strconv.FormatFloat(fbytes, 'f', 1, 64) + " gb)"
+	return strconv.FormatFloat(fbytes, 'f', 1, 64) + "g"
 }

@@ -41,6 +41,7 @@ The attribute list specifies which attributes are printed to standard out by `fs
 * `name`
 * `path`
 * `size`
+* `fsize` (can be used in the attribute list, but cannot be queried)
 * `content` (content can be queried, but cannot be added to the attribute list for printing)
 * `modified` (format: 'MM/DD/YYYY' or 'MM/DD/YYYY hh:mm:ss')
 * `stats` (can be used in the attribute list, but cannot be queried)

@@ -27,6 +27,7 @@ const (
 	T_ISFILE
 	T_ISDIR
 	T_SIZE
+	T_FSIZE
 	T_ALIST
 	T_IN
 	T_LT
@@ -141,6 +142,10 @@ func nodeString(treeNode *tnode) string {
 		return "PATH"
 	case T_SIZE:
 		return "SIZE"
+	case T_FSIZE:
+		return "FSIZE"
+	case T_STATS:
+		return "STATS"
 	case T_IN:
 		return "IN"
 	case T_LT:
