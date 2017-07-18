@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.6.0
 
 * Added "fsize" keyword for printing the "friendly size" of files.
 * Fixed a bug that allowed "stats" keyword to be used in the "where" clause.
