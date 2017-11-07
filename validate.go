@@ -48,7 +48,12 @@ func validateTree(n *tnode) {
     } else if parent == T_FSIZE || parent == T_STATS {
         fmt.Println("attribute cannot be queried: " + nodeString(n))
         os.Exit(1)
-    }
+    } else if parent == T_MATCHES {
+		if !(left(n).ntype == T_NAME || left(n).ntype == T_PATH || left(n).ntype == T_CONTENT) {
+			fmt.Println("invalid match check - only 'name', 'path', and 'content' can be matched")
+			os.Exit(1)
+		}
+	}
 
     if len(n.children) > 0 {
         validateTree(left(n))

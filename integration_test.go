@@ -161,3 +161,18 @@ func TestMultipleRoots(t *testing.T) {
 	out := run("name in 'testdata/sub1', 'testdata/sub3' where name endswith '.txt'")
 	expect(t, out, "test.txt\ntest2.txt\ntest4.txt")
 }
+
+func TestNameMatches(t *testing.T) {
+	out := run("name in 'testdata/sub1' where name matches '[tT]est[0-9]'")
+	expect(t, out, "Test3.Txt\ntest2.txt")
+}
+
+func TestPathMatches(t *testing.T) {
+	out := run("name in 'testdata/sub1' where path matches '[tT]est[0-9]'")
+	expect(t, out, "Test3.Txt\ntest2.txt")
+}
+
+func TestContentMatches(t *testing.T) {
+	out := run("name in 'testdata/sub1' where content matches '[tT]ext'")
+	expect(t, out, "Test3.Txt\ntest.txt")
+}

@@ -65,6 +65,11 @@ func execute_expression(expr string) {
 
 	// parse tree optimization
 	shiftShortestPathLeft(programRoot.children[3])
+	reg := compileRegexes(programRoot.children[3])
+	if reg != "" {
+		fmt.Println("invalid regex: " + reg)
+		os.Exit(1)
+	}
 
 	// collect any strings to search files for preemptively
 	searchStrings = collectFileSearchStrings(programRoot.children[3])

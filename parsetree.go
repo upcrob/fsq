@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"regexp"
 )
 
 const (
@@ -29,6 +30,7 @@ const (
 	T_SIZE
 	T_FSIZE
 	T_ALIST
+	T_MATCHES
 	T_IN
 	T_LT
 	T_LTE
@@ -46,6 +48,7 @@ type tnode struct {
 	ntype    int
 	ival     int
 	sval     string
+	regval   *regexp.Regexp
 	children []*tnode
 }
 
@@ -146,6 +149,8 @@ func nodeString(treeNode *tnode) string {
 		return "FSIZE"
 	case T_STATS:
 		return "STATS"
+	case T_MATCHES:
+		return "MATCHES"
 	case T_IN:
 		return "IN"
 	case T_LT:

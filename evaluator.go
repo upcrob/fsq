@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"regexp"
 )
 
 func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch) bool {
@@ -97,6 +98,8 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch) b
 		return contains(left(n).ntype, right(n).sval, fileSearch, info, true)
 	} else if n.ntype == T_ICCONTAINS {
 		return contains(left(n).ntype, right(n).sval, fileSearch, info, false)
+	} else if n.ntype == T_MATCHES {
+		return matches(left(n).ntype, right(n).regval, fileSearch, info)
 	}
 	return false
 }
@@ -156,6 +159,17 @@ func contains(ntype int, search string, fileSearch *FileSearch, info os.FileInfo
 		return !info.IsDir() && fileContainsString(fileSearch, info, search, caseSensitive)
 	}
 	return false
+}
+
+func matches(ntype int, re *regexp.Regexp, fileSearch *FileSearch, info os.FileInfo) bool {
+	if ntype == T_NAME {
+		return re.MatchString(info.Name())
+	} else if ntype == T_PATH {
+		return re.MatchString(fileSearch.path)
+	} else if ntype == T_CONTENT {
+		return !info.IsDir() && fileMatchesString(fileSearch, info, re)
+	}
+	panic("unhandled error - please file a bug report with your query and fsq version")
 }
 
 func startsWith(fileSearch *FileSearch, n *tnode, info os.FileInfo, search string, caseSensitive bool) bool {

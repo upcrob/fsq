@@ -33,6 +33,7 @@
 %token G
 %token CONTAINS
 %token CONTENT
+%token MATCHES
 %token MODIFIED
 %token STARTSWITH
 %token ENDSWITH
@@ -235,6 +236,12 @@ logic_expr:
 		$$.ntype = T_ICENDSWITH
 		addChild($$, $1)
 		addChild($$, $4)
+	}
+	| attribute MATCHES value {
+		$$ = new(tnode)
+		$$.ntype = T_MATCHES
+		addChild($$, $1)
+		addChild($$, $3)
 	}
 	| OPAREN or_expr CPAREN {
 		$$ = $2

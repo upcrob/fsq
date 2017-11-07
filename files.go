@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 	"strings"
+	"regexp"
+	"io/ioutil"
 )
 
 const DEFAULT_BLOCK_SIZE = 1024
@@ -24,6 +26,8 @@ type FileSearch struct {
 	closed bool
 	searchStrings []SearchString
 	contains []SearchString
+	read bool
+	content string
 }
 
 func newFileSearch(searchStrings []SearchString, path string) *FileSearch {
@@ -40,6 +44,7 @@ func newFileSearch(searchStrings []SearchString, path string) *FileSearch {
 	fs.searchStrings = searchStrings
 	fs.blocksRead = 0
 	fs.contains = make([]SearchString, 0, 5)
+	fs.read = false
 	if max > DEFAULT_BLOCK_SIZE {
 		fs.blockSize = max
 	} else {
@@ -122,6 +127,20 @@ func searchStringExists(searchSlice []SearchString, searchString SearchString) b
 		}
 	}
 	return false
+}
+
+func fileMatchesString(fs *FileSearch, info os.FileInfo, re *regexp.Regexp) bool {
+	if !fs.read {
+		// read whole file into memory
+		bytes, err := ioutil.ReadFile(fs.path)
+		if err != nil {
+			return false
+		}
+		fs.content = string(bytes)
+		fs.read = true
+	}
+
+	return re.MatchString(fs.content)
 }
 
 func fileStartsWithString(path string, str string, caseSensitive bool) bool {

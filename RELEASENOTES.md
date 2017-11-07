@@ -1,5 +1,9 @@
 # Release Notes
 
+## Next Release
+
+* Added "matches" keyword for handling regular expression matches.
+
 ## 1.6.0
 
 * Added "fsize" keyword for printing the "friendly size" of files.

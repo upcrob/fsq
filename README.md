@@ -60,6 +60,7 @@ The attribute list specifies which attributes are printed to standard out by `fs
 * `isfile` (this operator does not take any arguments)
 * `contains`
 * `ignorecase` (must be followed by '=', '!=', 'startswith', 'endswith', or 'contains')
+* `matches`
 
 ### Logic Operators
 
