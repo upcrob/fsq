@@ -113,6 +113,16 @@ func updateSearch(fs *FileSearch, info os.FileInfo) {
 }
 
 func fileContainsString(fs *FileSearch, info os.FileInfo, target string, caseSensitive bool) bool {
+	if fs.read {
+		// file contents had to be fully read into memory previously, use
+		// this instead of reading the file again incrementally
+		if caseSensitive {
+			return strings.Contains(fs.content, target)
+		} else {
+			return strings.Contains(strings.ToLower(fs.content), strings.ToLower(target))
+		}
+	}
+
 	for !fs.closed && !searchStringExists(fs.contains, SearchString{target, caseSensitive}) {
 		updateSearch(fs, info)
 	}
