@@ -1,8 +1,9 @@
 # Release Notes
 
-## Next Release
+## 1.7.0
 
 * Added "matches" keyword for handling regular expression matches.
+* Updated build to use Go 1.9.
 
 ## 1.6.0
 
