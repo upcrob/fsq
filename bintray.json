@@ -11,7 +11,7 @@
     },
 
     "version": {
-        "name": "1.7.0"
+        "name": "1.7.1"
     },
 
     "files": [{"includePattern": "bin/(.*)", "uploadPattern": "$1"}],
