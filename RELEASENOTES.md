@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.7.2
 
 * Updated build to use Go 1.11.
 
