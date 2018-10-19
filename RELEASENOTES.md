@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.7.3
 
 * Limited goroutine count to improve performance.
 

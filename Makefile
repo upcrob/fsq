@@ -1,5 +1,5 @@
 name=fsq
-version=1.7.2
+version=1.7.3
 
 build: genparser
 	go build
