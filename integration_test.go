@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+	"runtime"
 )
 
 func run(expr string) string {
@@ -14,6 +15,7 @@ func run(expr string) string {
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
+	maxRoutines = runtime.NumCPU()
 	execute_expression(expr)
 
 	outc := make(chan string)
