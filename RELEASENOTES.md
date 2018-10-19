@@ -1,5 +1,9 @@
 # Release Notes
 
+## Next Release
+
+* Limited goroutine count to improve performance.
+
 ## 1.7.2
 
 * Updated build to use Go 1.11.

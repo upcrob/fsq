@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"runtime"
 )
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
@@ -26,10 +27,12 @@ var evalGroup sync.WaitGroup
 var printGroup sync.WaitGroup
 var countMutex sync.Mutex
 var resultChannel chan *result
+var routineTickets chan int
 var count int
 var searchStrings []SearchString
 var matchCount int
 var sizeCount int64
+var maxRoutines int
 
 func main() {
 	if len(os.Args) != 2 {
@@ -37,6 +40,7 @@ func main() {
 		fmt.Println("usage: fsq <expression>")
 		os.Exit(1)
 	}
+	maxRoutines = runtime.NumCPU()
 	execute_expression(os.Args[1])
 }
 
@@ -45,6 +49,13 @@ func execute_expression(expr string) {
 	matchCount = 0
 	sizeCount = 0
 	resultChannel = make(chan *result)
+
+	// initialize the pool with the maximum number of tickets (goroutines)
+	// that may be running at a given time
+	routineTickets = make(chan int, maxRoutines)
+	for i := 0; i < maxRoutines; i++ {
+		routineTickets <- 1
+	}
 
 	lexer := new(Lexer)
 	lexer.expr = expr
@@ -123,6 +134,7 @@ func eval(path string, file os.FileInfo, err error) error {
 	}
 
 	evalGroup.Add(1)
+	takeRoutineTicket()
 	go doEval(path, file, programRoot.children[3], count)
 	count++
 	return nil
@@ -147,6 +159,7 @@ func doEval(path string, file os.FileInfo, n *tnode, order int) {
 	}
 	resultChannel <- res
 	evalGroup.Done()
+	returnRoutineTicket()
 }
 
 func printRoutine() {
@@ -265,4 +278,12 @@ func friendlySize(bytes int64) string {
 	}
 	fbytes /= 1000.0
 	return strconv.FormatFloat(fbytes, 'f', 1, 64) + "g"
+}
+
+func takeRoutineTicket() {
+	<- routineTickets
+}
+
+func returnRoutineTicket() {
+	routineTickets <- 1
 }
