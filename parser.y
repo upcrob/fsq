@@ -38,6 +38,7 @@
 %token STARTSWITH
 %token ENDSWITH
 %token IGNORECASE
+%token SHA1
 %token LT
 %token LTE
 %token GT
@@ -313,6 +314,10 @@ attribute:
 	| CONTENT {
 		$$ = new(tnode)
 		$$.ntype = T_CONTENT
+	}
+	| SHA1 {
+		$$ = new(tnode)
+		$$.ntype = T_SHA1
 	}
 	| MODIFIED {
 		$$ = new(tnode)

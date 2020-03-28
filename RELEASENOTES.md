@@ -1,5 +1,10 @@
 # Release Notes
 
+## Next Release
+
+* Added sha1 hashing.
+* Fixed bug that prevented path "equals ignorecase" queries from working properly.
+
 ## 1.7.3
 
 * Limited goroutine count to improve performance.

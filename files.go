@@ -4,7 +4,10 @@ import (
 	"os"
 	"strings"
 	"regexp"
+	"io"
 	"io/ioutil"
+	"crypto/sha1"
+	"fmt"
 )
 
 const DEFAULT_BLOCK_SIZE = 1024
@@ -28,6 +31,10 @@ type FileSearch struct {
 	contains []SearchString
 	read bool
 	content string
+}
+
+type ComputedHash struct {
+	sha1 *string
 }
 
 func newFileSearch(searchStrings []SearchString, path string) *FileSearch {
@@ -204,4 +211,19 @@ func fileEndsWithString(path string, info os.FileInfo, str string, caseSensitive
 	}
 
 	return str == endValue
+}
+
+func getFileSha1(path string) string {
+	f, err := os.Open(path)
+	if err != nil {
+		return ""
+	}
+	defer f.Close()
+
+	h := sha1.New()
+	_, copyErr := io.Copy(h, f)
+	if copyErr != nil {
+		return "";
+	}
+	return fmt.Sprintf("%x", h.Sum(nil))
 }

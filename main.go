@@ -21,6 +21,7 @@ type result struct {
 	matched bool
 	path    string
 	file    os.FileInfo
+	hash    *ComputedHash
 }
 
 var evalGroup sync.WaitGroup
@@ -142,14 +143,16 @@ func eval(path string, file os.FileInfo, err error) error {
 
 func doEval(path string, file os.FileInfo, n *tnode, order int) {
 	fileSearch := newFileSearch(searchStrings, path)
+	computedHash := new(ComputedHash)
 
 	res := new(result)
 	res.order = order
 	normalizedPath := forwardSlashes(path)
-	if evaluate(normalizedPath, file, n, fileSearch) {
+	if evaluate(normalizedPath, file, n, fileSearch, computedHash) {
 		res.matched = true
 		res.path = normalizedPath
 		res.file = file
+		res.hash = computedHash
 		countMutex.Lock()
 		matchCount++
 		sizeCount += file.Size()
@@ -174,7 +177,7 @@ func printRoutine() {
 		if res.order == current {
 			if res.matched {
 				// this is the next item to print out, print it
-				printRelevant(res.path, res.file)
+				printRelevant(res.path, res.file, res.hash)
 			}
 			current++
 
@@ -182,7 +185,7 @@ func printRoutine() {
 			cached := cache[current]
 			for cached != nil {
 				if cached.matched {
-					printRelevant(cached.path, cached.file)
+					printRelevant(cached.path, cached.file, res.hash)
 				}
 				delete(cache, current)
 				current++
@@ -196,7 +199,7 @@ func printRoutine() {
 	printGroup.Done()
 }
 
-func printRelevant(path string, file os.FileInfo) {
+func printRelevant(path string, file os.FileInfo, hash *ComputedHash) {
 	anyRequested := false
 	if attributeRequested(T_MODIFIED) {
 		anyRequested = true
@@ -217,6 +220,21 @@ func printRelevant(path string, file os.FileInfo) {
 			name += "/"
 		}
 		fmt.Print(pad(name, 25) + " ")
+	}
+	if attributeRequested(T_SHA1) {
+		anyRequested = true
+		var sha string = ""
+		if (hash == nil || hash.sha1 == nil) {
+			// file was matched but sha wasn't computed yet
+			if (file.IsDir()) {
+				sha = ""
+			} else {
+				sha = getFileSha1(path)
+			}
+		} else {
+			sha = *hash.sha1
+		}
+		fmt.Print(pad(sha, 40) + " ")
 	}
 	if attributeRequested(T_PATH) {
 		anyRequested = true
@@ -245,7 +263,8 @@ func validAttributesRequested() bool {
 	attribs := programRoot.children[0].children
 	for _, v := range attribs {
 		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE ||
-			v.ntype == T_MODIFIED || v.ntype == T_STATS || v.ntype == T_FSIZE) {
+			v.ntype == T_MODIFIED || v.ntype == T_STATS || v.ntype == T_FSIZE ||
+			v.ntype == T_SHA1) {
 			return false
 		}
 	}

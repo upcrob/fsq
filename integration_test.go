@@ -183,3 +183,33 @@ func TestPathEqualsIgnorecase(t *testing.T) {
 	out := run("name in 'testdata/sub1' where path ignorecase = 'testdata/sub1/test3.txt'")
 	expect(t, out, "Test3.Txt")
 }
+
+func TestSha1Startswith(t *testing.T) {
+	out := run("name in 'testdata' where sha1 startswith '3d47bc'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha1Endswith(t *testing.T) {
+	out := run("name in 'testdata' where sha1 endswith '8c308c'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha1Contains(t *testing.T) {
+	out := run("name in 'testdata' where sha1 contains 'efe0b9e47ab'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha1Equals(t *testing.T) {
+	out := run("name in 'testdata' where sha1 = '3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha1EqualsIgnorecase(t *testing.T) {
+	out := run("name in 'testdata' where sha1 ignorecase = '3D47BC8c8a81efe0b9e47ab4250f1a20ef8c308c'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha1Print(t *testing.T) {
+	out := run("sha1 in 'testdata' where sha1 = '3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c'")
+	expect(t, out, "3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c")
+}

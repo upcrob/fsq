@@ -32,6 +32,7 @@ var keywordMappings map[int]string = map[int]string{
 	STARTSWITH: "startswith",
 	ENDSWITH:   "endswith",
 	IGNORECASE: "ignorecase",
+	SHA1: "sha1",
 }
 
 func (lexer *Lexer) Lex(lval *yySymType) int {
@@ -123,6 +124,8 @@ func tokenString(symbolId int) string {
 		return "PATH"
 	case STATS:
 		return "STATS"
+	case SHA1:
+		return "SHA1"
 	default:
 		return "UNKNOWN"
 	}
@@ -184,7 +187,7 @@ func getInteger(expr string) string {
 
 func getIdent(expr string) string {
 	i := 0
-	for i < len(expr) && isAlpha(expr[i]) {
+	for i < len(expr) && (isAlpha(expr[i]) || isNumeric(expr[i])) {
 		i++
 	}
 
