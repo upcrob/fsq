@@ -50,10 +50,10 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch) b
 		if left(n).ntype == T_NAME {
 			if strings.ToLower(resolveAsString(path, left(n), info)) == strings.ToLower(right(n).sval) {
 				return true
-			} else if left(n).ntype == T_PATH {
-				if strings.ToLower(resolveAsString(path, left(n), info)) == strings.ToLower(right(n).sval) {
-					return true
-				}
+			}
+		} else if left(n).ntype == T_PATH {
+			if strings.ToLower(resolveAsString(path, left(n), info)) == strings.ToLower(right(n).sval) {
+				return true
 			}
 		}
 	} else if n.ntype == T_NEQ {

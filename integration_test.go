@@ -178,3 +178,8 @@ func TestContentMatches(t *testing.T) {
 	out := run("name in 'testdata/sub1' where content matches '[tT]ext'")
 	expect(t, out, "Test3.Txt\ntest.txt")
 }
+
+func TestPathEqualsIgnorecase(t *testing.T) {
+	out := run("name in 'testdata/sub1' where path ignorecase = 'testdata/sub1/test3.txt'")
+	expect(t, out, "Test3.Txt")
+}
