@@ -19,7 +19,7 @@ func validateTree(n *tnode) {
             parent == T_GT || parent == T_GTE {
         l := left(n).ntype
         r := right(n).ntype
-        if l == T_NAME || l == T_PATH || l == T_CONTENT || l == T_SHA1 {
+        if l == T_NAME || l == T_PATH || l == T_CONTENT || l == T_SHA1 || l == T_MD5 {
             if r != T_STRING {
                 fail()
             }

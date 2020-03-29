@@ -225,7 +225,6 @@ func printRelevant(path string, file os.FileInfo, hash *ComputedHash) {
 		anyRequested = true
 		var sha string = ""
 		if (hash == nil || hash.sha1 == nil) {
-			// file was matched but sha wasn't computed yet
 			if (file.IsDir()) {
 				sha = ""
 			} else {
@@ -235,6 +234,20 @@ func printRelevant(path string, file os.FileInfo, hash *ComputedHash) {
 			sha = *hash.sha1
 		}
 		fmt.Print(pad(sha, 40) + " ")
+	}
+	if attributeRequested(T_MD5) {
+		anyRequested = true
+		var md5 string = ""
+		if (hash == nil || hash.md5 == nil) {
+			if (file.IsDir()) {
+				md5 = ""
+			} else {
+				md5 = getFileMd5(path)
+			}
+		} else {
+			md5 = *hash.md5
+		}
+		fmt.Print(pad(md5, 32) + " ")
 	}
 	if attributeRequested(T_PATH) {
 		anyRequested = true
@@ -264,7 +277,7 @@ func validAttributesRequested() bool {
 	for _, v := range attribs {
 		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE ||
 			v.ntype == T_MODIFIED || v.ntype == T_STATS || v.ntype == T_FSIZE ||
-			v.ntype == T_SHA1) {
+			v.ntype == T_SHA1 || v.ntype == T_MD5) {
 			return false
 		}
 	}

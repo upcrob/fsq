@@ -213,3 +213,33 @@ func TestSha1Print(t *testing.T) {
 	out := run("sha1 in 'testdata' where sha1 = '3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c'")
 	expect(t, out, "3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c")
 }
+
+func TestMd5Startswith(t *testing.T) {
+	out := run("name in 'testdata' where md5 startswith 'd1b0c3'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestMd5Endswith(t *testing.T) {
+	out := run("name in 'testdata' where md5 endswith '317d31'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestMd5Contains(t *testing.T) {
+	out := run("name in 'testdata' where md5 contains 'fd8d0f55'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestMd5Equals(t *testing.T) {
+	out := run("name in 'testdata' where md5 = 'd1b0c3ffb4dfd8d0f55a2a3d2a317d31'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestMd5EqualsIgnorecase(t *testing.T) {
+	out := run("name in 'testdata' where md5 ignorecase = 'D1B0C3Ffb4dfd8d0f55a2a3d2a317d31'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestMd5Print(t *testing.T) {
+	out := run("md5 in 'testdata' where md5 = 'd1b0c3ffb4dfd8d0f55a2a3d2a317d31'")
+	expect(t, out, "d1b0c3ffb4dfd8d0f55a2a3d2a317d31")
+}

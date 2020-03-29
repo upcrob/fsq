@@ -33,6 +33,7 @@ var keywordMappings map[int]string = map[int]string{
 	ENDSWITH:   "endswith",
 	IGNORECASE: "ignorecase",
 	SHA1: "sha1",
+	MD5: "md5",
 }
 
 func (lexer *Lexer) Lex(lval *yySymType) int {
@@ -126,6 +127,8 @@ func tokenString(symbolId int) string {
 		return "STATS"
 	case SHA1:
 		return "SHA1"
+	case MD5:
+		return "MD5"
 	default:
 		return "UNKNOWN"
 	}

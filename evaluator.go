@@ -41,7 +41,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if resolveAsString(path, left(n), info, hash) == right(n).sval {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
 			if resolveAsString(path, left(n), info, hash) == strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -59,7 +59,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if strings.ToLower(resolveAsString(path, left(n), info, hash)) == strings.ToLower(right(n).sval) {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
 			if resolveAsString(path, left(n), info, hash) == strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -73,7 +73,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if resolveAsString(path, left(n), info, hash) != right(n).sval {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
 			if resolveAsString(path, left(n), info, hash) != strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -91,7 +91,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if strings.ToLower(resolveAsString(path, left(n), info, hash)) != strings.ToLower(right(n).sval) {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
 			if resolveAsString(path, left(n), info, hash) != strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -132,6 +132,14 @@ func resolveAsString(path string, n *tnode, info os.FileInfo, hash *ComputedHash
 			sha := getFileSha1(path)
 			hash.sha1 = &sha
 			return sha
+		}
+	} else if n.ntype == T_MD5 {
+		if hash.md5 != nil {
+			return *hash.md5
+		} else {
+			md5 := getFileMd5(path)
+			hash.md5 = &md5
+			return md5
 		}
 	}
 	return ""
@@ -192,8 +200,19 @@ func contains(ntype int, search string, fileSearch *FileSearch, info os.FileInfo
 			sha := getFileSha1(fileSearch.path)
 			hash.sha1 = &sha
 		}
-
 		return strings.Contains(*hash.sha1, search)
+	} else if (ntype == T_MD5) {
+		if info.IsDir() {
+			return false
+		}
+		if caseSensitive {
+			search = strings.ToLower(search)
+		}
+		if hash.md5 == nil {
+			md5 := getFileMd5(fileSearch.path)
+			hash.md5 = &md5
+		}
+		return strings.Contains(*hash.md5, search)
 	}
 	return false
 }
@@ -211,6 +230,12 @@ func matches(ntype int, re *regexp.Regexp, fileSearch *FileSearch, info os.FileI
 			hash.sha1 = &sha
 		}
 		return !info.IsDir() && re.MatchString(*hash.sha1)
+	} else if ntype == T_MD5 {
+		if hash.md5 == nil {
+			md5 := getFileMd5(fileSearch.path)
+			hash.md5 = &md5
+		}
+		return !info.IsDir() && re.MatchString(*hash.md5)
 	}
 	panic("unhandled error - please file a bug report with your query and fsq version")
 }
