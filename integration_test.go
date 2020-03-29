@@ -209,6 +209,11 @@ func TestSha1EqualsIgnorecase(t *testing.T) {
 	expect(t, out, "Test3.Txt")
 }
 
+func TestSha1Matches(t *testing.T) {
+	out := run("name in 'testdata' where sha1 matches '3[d]47bc8[a-f0-9]+'")
+	expect(t, out, "Test3.Txt")
+}
+
 func TestSha1Print(t *testing.T) {
 	out := run("sha1 in 'testdata' where sha1 = '3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c'")
 	expect(t, out, "3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c")
@@ -239,6 +244,11 @@ func TestMd5EqualsIgnorecase(t *testing.T) {
 	expect(t, out, "Test3.Txt")
 }
 
+func TestMd5Matches(t *testing.T) {
+	out := run("name in 'testdata' where md5 matches 'd1[b]0c3f[a-f0-9]+'")
+	expect(t, out, "Test3.Txt")
+}
+
 func TestMd5Print(t *testing.T) {
 	out := run("md5 in 'testdata' where md5 = 'd1b0c3ffb4dfd8d0f55a2a3d2a317d31'")
 	expect(t, out, "d1b0c3ffb4dfd8d0f55a2a3d2a317d31")
@@ -266,6 +276,11 @@ func TestSha256Equals(t *testing.T) {
 
 func TestSha256EqualsIgnorecase(t *testing.T) {
 	out := run("name in 'testdata' where sha256 ignorecase = 'C71B73872886F8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha256Matches(t *testing.T) {
+	out := run("name in 'testdata' where sha256 matches 'c71[b]738[a-f0-9]+'")
 	expect(t, out, "Test3.Txt")
 }
 

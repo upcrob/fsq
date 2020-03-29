@@ -261,7 +261,7 @@ func matches(ntype int, re *regexp.Regexp, fileSearch *FileSearch, info os.FileI
 			sha256 := getFileSha256(fileSearch.path)
 			hash.sha256 = &sha256
 		}
-		return !info.IsDir() && re.MatchString(*hash.md5)
+		return !info.IsDir() && re.MatchString(*hash.sha256)
 	}
 	panic("unhandled error - please file a bug report with your query and fsq version")
 }
