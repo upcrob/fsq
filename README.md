@@ -41,6 +41,8 @@ The attribute list specifies which attributes are printed to standard out by `fs
 * `content` (content can be queried, but cannot be added to the attribute list for printing)
 * `modified` (format: 'MM/DD/YYYY' or 'MM/DD/YYYY hh:mm:ss')
 * `sha1`
+* `sha256`
+* `md5`
 * `stats` (can be used in the attribute list, but cannot be queried)
 
 ### Supported Conditional Operators

@@ -1,8 +1,10 @@
 # Release Notes
 
-## Next Release
+## 1.8.0
 
-* Added sha1 hashing.
+* Added SHA1 hashing.
+* Added MD5 hashing.
+* Added SHA256 hashing.
 * Fixed bug that prevented path "equals ignorecase" queries from working properly.
 
 ## 1.7.3
