@@ -24,6 +24,7 @@ const (
 	T_ICENDSWITH
 	T_SHA1
 	T_MD5
+	T_SHA256
 	T_NAME
 	T_PATH
 	T_STATS
@@ -145,6 +146,8 @@ func nodeString(treeNode *tnode) string {
 		return "SHA1"
 	case T_MD5:
 		return "MD5"
+	case T_SHA256:
+		return "SHA256"
 	case T_NAME:
 		return "NAME"
 	case T_PATH:

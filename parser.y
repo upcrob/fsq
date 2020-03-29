@@ -40,6 +40,7 @@
 %token IGNORECASE
 %token SHA1
 %token MD5
+%token SHA256
 %token LT
 %token LTE
 %token GT
@@ -323,6 +324,10 @@ attribute:
 	| MD5 {
 		$$ = new(tnode)
 		$$.ntype = T_MD5
+	}
+	| SHA256 {
+		$$ = new(tnode)
+		$$.ntype = T_SHA256
 	}
 	| MODIFIED {
 		$$ = new(tnode)

@@ -34,6 +34,7 @@ var keywordMappings map[int]string = map[int]string{
 	IGNORECASE: "ignorecase",
 	SHA1: "sha1",
 	MD5: "md5",
+	SHA256: "sha256",
 }
 
 func (lexer *Lexer) Lex(lval *yySymType) int {
@@ -129,6 +130,8 @@ func tokenString(symbolId int) string {
 		return "SHA1"
 	case MD5:
 		return "MD5"
+	case SHA256:
+		return "SHA256"
 	default:
 		return "UNKNOWN"
 	}

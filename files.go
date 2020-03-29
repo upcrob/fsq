@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"crypto/sha1"
 	"crypto/md5"
+	"crypto/sha256"
 	"fmt"
 )
 
@@ -37,6 +38,7 @@ type FileSearch struct {
 type ComputedHash struct {
 	sha1 *string
 	md5 *string
+	sha256 *string
 }
 
 func newFileSearch(searchStrings []SearchString, path string) *FileSearch {
@@ -238,6 +240,21 @@ func getFileMd5(path string) string {
 	defer f.Close()
 
 	h := md5.New()
+	_, copyErr := io.Copy(h, f)
+	if copyErr != nil {
+		return "";
+	}
+	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
+func getFileSha256(path string) string {
+	f, err := os.Open(path)
+	if err != nil {
+		return ""
+	}
+	defer f.Close()
+
+	h := sha256.New()
 	_, copyErr := io.Copy(h, f)
 	if copyErr != nil {
 		return "";

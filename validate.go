@@ -19,7 +19,7 @@ func validateTree(n *tnode) {
             parent == T_GT || parent == T_GTE {
         l := left(n).ntype
         r := right(n).ntype
-        if l == T_NAME || l == T_PATH || l == T_CONTENT || l == T_SHA1 || l == T_MD5 {
+        if l == T_NAME || l == T_PATH || l == T_CONTENT || l == T_SHA1 || l == T_MD5 || l == T_SHA256 {
             if r != T_STRING {
                 fail()
             }
@@ -49,8 +49,9 @@ func validateTree(n *tnode) {
         fmt.Println("attribute cannot be queried: " + nodeString(n))
         os.Exit(1)
     } else if parent == T_MATCHES {
-		if !(left(n).ntype == T_NAME || left(n).ntype == T_PATH || left(n).ntype == T_CONTENT || left(n).ntype == T_SHA1) {
-			fmt.Println("invalid match check - only 'name', 'path', 'sha1', and 'content' can be matched")
+        if !(left(n).ntype == T_NAME || left(n).ntype == T_PATH || left(n).ntype == T_CONTENT ||
+            left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 || left(n).ntype == T_SHA256) {
+			fmt.Println("invalid match check - only 'name', 'path', 'sha1', 'md5', 'sha256' and 'content' can be matched")
 			os.Exit(1)
 		}
 	}

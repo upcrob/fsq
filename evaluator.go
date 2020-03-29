@@ -41,7 +41,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if resolveAsString(path, left(n), info, hash) == right(n).sval {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 || left(n).ntype == T_SHA256 {
 			if resolveAsString(path, left(n), info, hash) == strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -59,7 +59,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if strings.ToLower(resolveAsString(path, left(n), info, hash)) == strings.ToLower(right(n).sval) {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 || left(n).ntype == T_SHA256 {
 			if resolveAsString(path, left(n), info, hash) == strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -73,7 +73,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if resolveAsString(path, left(n), info, hash) != right(n).sval {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 || left(n).ntype == T_SHA256 {
 			if resolveAsString(path, left(n), info, hash) != strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -91,7 +91,7 @@ func evaluate(path string, info os.FileInfo, n *tnode, fileSearch *FileSearch, h
 			if strings.ToLower(resolveAsString(path, left(n), info, hash)) != strings.ToLower(right(n).sval) {
 				return true
 			}
-		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 {
+		} else if left(n).ntype == T_SHA1 || left(n).ntype == T_MD5 || left(n).ntype == T_SHA256 {
 			if resolveAsString(path, left(n), info, hash) != strings.ToLower(right(n).sval) {
 				return true
 			}
@@ -140,6 +140,14 @@ func resolveAsString(path string, n *tnode, info os.FileInfo, hash *ComputedHash
 			md5 := getFileMd5(path)
 			hash.md5 = &md5
 			return md5
+		}
+	} else if n.ntype == T_SHA256 {
+		if hash.sha256 != nil {
+			return *hash.sha256
+		} else {
+			sha256 := getFileSha256(path)
+			hash.sha256 = &sha256
+			return sha256
 		}
 	}
 	return ""
@@ -213,6 +221,18 @@ func contains(ntype int, search string, fileSearch *FileSearch, info os.FileInfo
 			hash.md5 = &md5
 		}
 		return strings.Contains(*hash.md5, search)
+	} else if (ntype == T_SHA256) {
+		if info.IsDir() {
+			return false
+		}
+		if caseSensitive {
+			search = strings.ToLower(search)
+		}
+		if hash.sha256 == nil {
+			sha256 := getFileSha256(fileSearch.path)
+			hash.sha256 = &sha256
+		}
+		return strings.Contains(*hash.sha256, search)
 	}
 	return false
 }
@@ -234,6 +254,12 @@ func matches(ntype int, re *regexp.Regexp, fileSearch *FileSearch, info os.FileI
 		if hash.md5 == nil {
 			md5 := getFileMd5(fileSearch.path)
 			hash.md5 = &md5
+		}
+		return !info.IsDir() && re.MatchString(*hash.md5)
+	} else if ntype == T_SHA256 {
+		if hash.sha256 == nil {
+			sha256 := getFileSha256(fileSearch.path)
+			hash.sha256 = &sha256
 		}
 		return !info.IsDir() && re.MatchString(*hash.md5)
 	}

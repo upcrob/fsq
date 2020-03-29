@@ -249,6 +249,20 @@ func printRelevant(path string, file os.FileInfo, hash *ComputedHash) {
 		}
 		fmt.Print(pad(md5, 32) + " ")
 	}
+	if attributeRequested(T_SHA256) {
+		anyRequested = true
+		var sha256 string = ""
+		if (hash == nil || hash.sha256 == nil) {
+			if (file.IsDir()) {
+				sha256 = ""
+			} else {
+				sha256 = getFileSha256(path)
+			}
+		} else {
+			sha256 = *hash.sha256
+		}
+		fmt.Print(pad(sha256, 64) + " ")
+	}
 	if attributeRequested(T_PATH) {
 		anyRequested = true
 		if file.IsDir() {
@@ -277,7 +291,7 @@ func validAttributesRequested() bool {
 	for _, v := range attribs {
 		if !(v.ntype == T_NAME || v.ntype == T_PATH || v.ntype == T_SIZE ||
 			v.ntype == T_MODIFIED || v.ntype == T_STATS || v.ntype == T_FSIZE ||
-			v.ntype == T_SHA1 || v.ntype == T_MD5) {
+			v.ntype == T_SHA1 || v.ntype == T_MD5 || v.ntype == T_SHA256) {
 			return false
 		}
 	}

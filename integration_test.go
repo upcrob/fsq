@@ -243,3 +243,33 @@ func TestMd5Print(t *testing.T) {
 	out := run("md5 in 'testdata' where md5 = 'd1b0c3ffb4dfd8d0f55a2a3d2a317d31'")
 	expect(t, out, "d1b0c3ffb4dfd8d0f55a2a3d2a317d31")
 }
+
+func TestSha256Startswith(t *testing.T) {
+	out := run("name in 'testdata' where sha256 startswith 'c71b7387'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha256Endswith(t *testing.T) {
+	out := run("name in 'testdata' where sha256 endswith '5f18763e'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha256Contains(t *testing.T) {
+	out := run("name in 'testdata' where sha256 contains 'a205e57e20'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha256Equals(t *testing.T) {
+	out := run("name in 'testdata' where sha256 = 'c71b73872886f8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha256EqualsIgnorecase(t *testing.T) {
+	out := run("name in 'testdata' where sha256 ignorecase = 'C71B73872886F8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e'")
+	expect(t, out, "Test3.Txt")
+}
+
+func TestSha256Print(t *testing.T) {
+	out := run("sha256 in 'testdata' where sha256 = 'c71b73872886f8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e'")
+	expect(t, out, "c71b73872886f8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e")
+}
