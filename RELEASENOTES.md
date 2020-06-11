@@ -1,5 +1,9 @@
 # Release Notes
 
+## Next Release
+
+* Hashing search optimizations.
+
 ## 1.8.0
 
 * Added SHA1 hashing.

@@ -8,8 +8,9 @@ const WEIGHT_NONE int = 0
 const WEIGHT_INFO int = 1
 const WEIGHT_FILE_STARTSWITH int = 2
 const WEIGHT_FILE_ENDSWITH int = 3
-const WEIGHT_FILE_MATCHES int = 4
-const WEIGHT_FILE_CONTAINS int = 5
+const WEIGHT_FILE_HASH int = 4
+const WEIGHT_FILE_MATCHES int = 5
+const WEIGHT_FILE_CONTAINS int = 6
 
 func shiftShortestPathLeft(n *tnode) int {
 	if (n.ntype == T_CONTAINS || n.ntype == T_ICCONTAINS) && left(n).ntype == T_CONTENT {
@@ -20,6 +21,8 @@ func shiftShortestPathLeft(n *tnode) int {
 		return WEIGHT_FILE_ENDSWITH
 	} else if (n.ntype == T_MATCHES && left(n).ntype == T_CONTENT) {
 		return WEIGHT_FILE_MATCHES
+	} else if (len(n.children) > 0 && left(n) != nil && (left(n).ntype == T_SHA1 || left(n).ntype == T_SHA256 || left(n).ntype == T_MD5)) {
+		return WEIGHT_FILE_HASH
 	} else if n.ntype == T_AND || n.ntype == T_OR {
 		// test each side and swap if necessary
 		lval := shiftShortestPathLeft(left(n))
