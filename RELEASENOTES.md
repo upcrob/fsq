@@ -1,6 +1,6 @@
 # Release Notes
 
-## Next Release
+## 1.8.1
 
 * Hashing search optimizations.
 
