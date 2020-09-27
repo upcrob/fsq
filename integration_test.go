@@ -42,6 +42,65 @@ func unpad(result string) string {
 	return re.ReplaceAllString(result, "\n")
 }
 
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
+	} else {
+		return true
+	}
+}
+
+func expectExists(t *testing.T, path string, shouldExist bool) {
+	if shouldExist {
+		if !fileExists(path) {
+			t.Error("expected " + path + " to exist")
+		}
+	} else {
+		if fileExists(path) {
+			t.Error("did not expect " + path + " to exist")
+		}
+	}
+}
+
+func createFile(path string) {
+	emptyFile, _ := os.Create(path)
+	emptyFile.Close()
+}
+
+func createDir(path string) {
+	os.Mkdir(path, 0777)
+}
+
+func deleteFile(path string) {
+	os.Remove(path)
+}
+
+func setupDelEnv() {
+	createDir("testdata/deltest")
+	createFile("testdata/deltest/a")
+	createFile("testdata/deltest/b")
+	createFile("testdata/deltest/c")
+	createFile("testdata/deltest/d")
+
+	createDir("testdata/deltest/delme")
+	createFile("testdata/deltest/delme/x")
+	createFile("testdata/deltest/delme/y")
+	createFile("testdata/deltest/delme/z")
+}
+
+func teardownDelEnv() {
+	deleteFile("testdata/deltest/delme/x")
+	deleteFile("testdata/deltest/delme/y")
+	deleteFile("testdata/deltest/delme/z")
+	deleteFile("testdata/deltest/delme")
+	deleteFile("testdata/deltest/a")
+	deleteFile("testdata/deltest/b")
+	deleteFile("testdata/deltest/c")
+	deleteFile("testdata/deltest/d")
+	deleteFile("testdata/deltest")
+}
+
 func TestEndswith(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name endswith '.txt'")
 	expect(t, out, "test.txt\ntest2.txt")
@@ -287,4 +346,36 @@ func TestSha256Matches(t *testing.T) {
 func TestSha256Print(t *testing.T) {
 	out := run("sha256 in 'testdata' where sha256 = 'c71b73872886f8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e'")
 	expect(t, out, "c71b73872886f8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e")
+}
+
+func TestSimpleFileDeletion(t *testing.T) {
+	doDelete = true
+	setupDelEnv()
+	out := run("name in 'testdata/deltest' where name = 'a' or name = 'b' or name = 'x'")
+	expect(t, out, "(deleted) a\n(deleted) b\n(deleted) x")
+	expectExists(t, "testdata/deltest/a", false);
+	expectExists(t, "testdata/deltest/b", false);
+	expectExists(t, "testdata/deltest/c", true);
+	expectExists(t, "testdata/deltest/d", true);
+	expectExists(t, "testdata/deltest/delme", true)
+	expectExists(t, "testdata/deltest/delme/x", false);
+	expectExists(t, "testdata/deltest/delme/y", true);
+	expectExists(t, "testdata/deltest/delme/z", true);
+	teardownDelEnv()
+}
+
+func TestDirectoryDeletion(t *testing.T) {
+	doDelete = true
+	setupDelEnv()
+	out := run("name in 'testdata/deltest' where name = 'a' or name = 'delme'")
+	expect(t, out, "(deleted) a\n(deleted) delme/")
+	expectExists(t, "testdata/deltest/a", false);
+	expectExists(t, "testdata/deltest/b", true);
+	expectExists(t, "testdata/deltest/c", true);
+	expectExists(t, "testdata/deltest/d", true);
+	expectExists(t, "testdata/deltest/delme", false)
+	expectExists(t, "testdata/deltest/delme/x", false);
+	expectExists(t, "testdata/deltest/delme/y", false);
+	expectExists(t, "testdata/deltest/delme/z", false);
+	teardownDelEnv()
 }

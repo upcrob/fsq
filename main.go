@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 	"runtime"
+	"flag"
 )
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
@@ -34,15 +35,21 @@ var searchStrings []SearchString
 var matchCount int
 var sizeCount int64
 var maxRoutines int
+var doDelete bool
 
 func main() {
-	if len(os.Args) != 2 {
+	flag.BoolVar(&doDelete, "d", false, "delete matched files")
+	flag.Parse()
+
+	if len(flag.Args()) <= 0 {
 		fmt.Println("fsq version " + VERSION)
-		fmt.Println("usage: fsq <expression>")
+		fmt.Println("usage: fsq [-d] <expression>")
+		fmt.Println("  -d Delete matched files and directories")
 		os.Exit(1)
 	}
+
 	maxRoutines = runtime.NumCPU()
-	execute_expression(os.Args[1])
+	execute_expression(flag.Arg(0))
 }
 
 func execute_expression(expr string) {
@@ -165,6 +172,25 @@ func doEval(path string, file os.FileInfo, n *tnode, order int) {
 	returnRoutineTicket()
 }
 
+func handleDelete(path string, isDir bool) bool {
+	if (doDelete) {
+		if isDir {
+			err := os.RemoveAll(path)
+			return err == nil
+		} else {
+			err := os.Remove(path)
+			if os.IsNotExist(err) {
+				// file was already deleted by either parent directory or external process
+				return true
+			} else {
+				return err == nil
+			}
+		}
+	} else {
+		return false
+	}
+}
+
 func printRoutine() {
 	current := 0
 	cache := make(map[int]*result)
@@ -177,7 +203,8 @@ func printRoutine() {
 		if res.order == current {
 			if res.matched {
 				// this is the next item to print out, print it
-				printRelevant(res.path, res.file, res.hash)
+				deleted := handleDelete(res.path, res.file.IsDir())
+				printRelevant(res.path, res.file, res.hash, deleted)
 			}
 			current++
 
@@ -185,7 +212,8 @@ func printRoutine() {
 			cached := cache[current]
 			for cached != nil {
 				if cached.matched {
-					printRelevant(cached.path, cached.file, res.hash)
+					deleted := handleDelete(cached.path, cached.file.IsDir())
+					printRelevant(cached.path, cached.file, res.hash, deleted)
 				}
 				delete(cache, current)
 				current++
@@ -199,7 +227,14 @@ func printRoutine() {
 	printGroup.Done()
 }
 
-func printRelevant(path string, file os.FileInfo, hash *ComputedHash) {
+func printRelevant(path string, file os.FileInfo, hash *ComputedHash, deleted bool) {
+	if (doDelete) {
+		if (deleted) {
+			fmt.Print("(deleted) ")
+		} else {
+			fmt.Print("(delete failed) ")
+		}
+	}
 	anyRequested := false
 	if attributeRequested(T_MODIFIED) {
 		anyRequested = true
