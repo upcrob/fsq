@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
 	"runtime"
 	"flag"
+	"io/ioutil"
 )
 
 const TIMESTAMP_FORMAT = "01/02/2006 15:04:05"
@@ -50,6 +50,41 @@ func main() {
 
 	maxRoutines = runtime.NumCPU()
 	execute_expression(flag.Arg(0))
+}
+
+func includesPath(paths []*tnode, path string) bool {
+	if paths == nil {
+		return false
+	}
+
+	for i := 0; i < len(paths); i++ {
+		if paths[i].sval == path {
+			return true
+		}
+	}
+	return false
+}
+
+func walk(path string, eval func(path string, file os.FileInfo), excludePaths []*tnode) {
+	if !includesPath(excludePaths, path) {
+		files, err := ioutil.ReadDir(path)
+		if err == nil {
+			for i := 0; i < len(files); i++ {
+				var newPath string
+				if path == "." {
+					newPath = files[i].Name()
+				} else {
+					newPath = path + "/" + files[i].Name()
+				}
+				if files[i].IsDir() {
+					eval(newPath, files[i])
+					walk(newPath, eval, excludePaths)
+				} else {
+					eval(newPath, files[i])
+				}
+			}
+		}
+	}
 }
 
 func execute_expression(expr string) {
@@ -98,13 +133,19 @@ func execute_expression(expr string) {
 	go printRoutine()
 	printGroup.Add(1)
 
-	// walk file system
-	// the grammar causes reverses the list of root directories,
-	// so we have to walk the list in reverse
-	rootList := programRoot.children[2].children
-	for i := len(rootList) - 1; i >= 0; i-- {
-		root := rootList[i].sval
-		filepath.Walk(root, eval)
+	if programRoot.children[1].ival == 1 || programRoot.children[1].ival == 0 {
+		// walk file system
+		rootList := programRoot.children[2].children
+
+		// the grammar reverses the list of root directories,
+		// so we have to walk the list in reverse
+		for i := len(rootList) - 1; i >= 0; i-- {
+			root := rootList[i].sval
+			walk(root, eval, nil)
+		}
+	} else {
+		// walk the file system, excluding the list of provided paths
+		walk(".", eval, programRoot.children[2].children)
 	}
 	evalGroup.Wait()
 	resultChannel <- nil
@@ -128,16 +169,16 @@ func execute_expression(expr string) {
 	}
 }
 
-func eval(path string, file os.FileInfo, err error) error {
+func eval(path string, file os.FileInfo) {
 	if file == nil {
-		return nil
+		return
 	}
 
 	rootList := programRoot.children[2].children
 	for i := 0; i < len(rootList); i++ {
 		if path == rootList[i].sval {
 			// exclude root directory
-			return nil
+			return
 		}
 	}
 
@@ -145,7 +186,6 @@ func eval(path string, file os.FileInfo, err error) error {
 	takeRoutineTicket()
 	go doEval(path, file, programRoot.children[3], count)
 	count++
-	return nil
 }
 
 func doEval(path string, file os.FileInfo, n *tnode, order int) {

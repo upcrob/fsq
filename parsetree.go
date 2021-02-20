@@ -35,6 +35,7 @@ const (
 	T_ALIST
 	T_MATCHES
 	T_IN
+	T_NOTIN
 	T_LT
 	T_LTE
 	T_GT
@@ -162,6 +163,8 @@ func nodeString(treeNode *tnode) string {
 		return "MATCHES"
 	case T_IN:
 		return "IN"
+	case T_NOTIN:
+		return "NOTIN"
 	case T_LT:
 		return "LT"
 	case T_LTE:

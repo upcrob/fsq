@@ -223,6 +223,16 @@ func TestMultipleRoots(t *testing.T) {
 	expect(t, out, "test.txt\ntest2.txt\ntest4.txt")
 }
 
+func TestNotIn(t *testing.T) {
+	out := run("name not in 'testdata/sub1' where name endswith '.txt'")
+	expect(t, out, "test4.txt\noverlap1.txt\noverlap2.txt")
+}
+
+func TestNotInMultiple(t *testing.T) {
+	out := run("name not in 'testdata/sub1','testdata/sub4' where name endswith '.txt'")
+	expect(t, out, "test4.txt")
+}
+
 func TestNameMatches(t *testing.T) {
 	out := run("name in 'testdata/sub1' where name matches '[tT]est[0-9]'")
 	expect(t, out, "Test3.Txt\ntest2.txt")

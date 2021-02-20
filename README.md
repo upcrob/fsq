@@ -12,7 +12,7 @@ The `fsq` ('file system query' - pronounced, 'fisk') utility is a tool for doing
 
 `fsq` takes a single argument: the expression.  This expression is composed of the following parts:
 
-	<attribute list> in <locations> where <conditions>
+	<attribute list> [not] in <locations> where <conditions>
 
 ### Example Queries
 
@@ -27,6 +27,10 @@ If the location (in the above case, '/data') is omitted, `fsq` will default to t
 Multiple locations can be specified as well:
 
 	fsq "name in '/opt', '/media' where size > 5m"
+
+Locations may also be excluded.  In the following example, all locations under the current directory except for `.git` will be searched for files containing the string, "implements MyInterface":
+
+	fsq "path not in '.git' where content contains 'implements MyClass'"
 
 The attribute list specifies which attributes are printed to standard out by `fsq`.  In the above case, this is just the filename ('name').  The following example will print both the path to the file and the size (in bytes):
 

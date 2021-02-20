@@ -255,6 +255,12 @@ location:
 	IN {
 		$$ = new(tnode)
 		$$.ntype = T_IN
+		$$.ival = 1
+	}
+	| NOT IN {
+		$$ = new(tnode)
+		$$.ntype = T_NOTIN
+		$$.ival = 2
 	}
 	;
 
