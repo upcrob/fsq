@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.10.0
+
+* Support 'not in' expression for excluding directories.
+
 ## 1.9.0
 
 * Added ability to delete files.
