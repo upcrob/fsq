@@ -28,9 +28,9 @@ Multiple locations can be specified as well:
 
 	fsq "name in '/opt', '/media' where size > 5m"
 
-Locations may also be excluded.  In the following example, all locations under the current directory except for `.git` will be searched for files containing the string, "implements MyClass":
+Locations may also be excluded.  In the following example, all locations under the current directory except for `.git` will be searched for files containing the string, "implements MyInterface":
 
-	fsq "path not in '.git' where content contains 'implements MyClass'"
+	fsq "path not in '.git' where content contains 'implements MyInterface'"
 
 The attribute list specifies which attributes are printed to standard out by `fsq`.  In the above case, this is just the filename ('name').  The following example will print both the path to the file and the size (in bytes):
 
