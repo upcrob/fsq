@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.10.1
+
+* Update build system for Go 1.23.
+* Update build to support ARM on Mac.
+
 ## 1.10.0
 
 * Support 'not in' expression for excluding directories.

@@ -1,5 +1,5 @@
 name=fsq
-version=1.10.0
+version=1.10.1
 
 build: genparser
 	go build
@@ -20,6 +20,7 @@ all: test
 	mkdir -p bin/$(name)-$(version)-freebsd-386
 
 	export GOOS=darwin; export GOARCH=amd64; go build -o bin/$(name)-$(version)-osx-amd64/$(name)
+	export GOOS=darwin; export GOARCH=arm64; go build -o bin/$(name)-$(version)-osx-arm64/$(name)
 	export GOOS=linux; export GOARCH=386; go build -o bin/$(name)-$(version)-linux-386/$(name)
 	export GOOS=linux; export GOARCH=amd64; go build -o bin/$(name)-$(version)-linux-amd64/$(name)
 	export GOOS=linux; export GOARCH=arm; go build -o bin/$(name)-$(version)-linux-arm/$(name)
@@ -30,6 +31,7 @@ all: test
 	export GOOS=freebsd; export GOARCH=386; go build -o bin/$(name)-$(version)-freebsd-386/$(name)
 
 	(cd bin && zip -r - $(name)-$(version)-osx-amd64) > bin/$(name)-$(version)-osx-amd64.zip
+	(cd bin && zip -r - $(name)-$(version)-osx-arm64) > bin/$(name)-$(version)-osx-arm64.zip
 	(cd bin && zip -r - $(name)-$(version)-linux-386) > bin/$(name)-$(version)-linux-386.zip
 	(cd bin && zip -r - $(name)-$(version)-linux-amd64) > bin/$(name)-$(version)-linux-amd64.zip
 	(cd bin && zip -r - $(name)-$(version)-linux-arm) > bin/$(name)-$(version)-linux-arm.zip
@@ -40,6 +42,7 @@ all: test
 	(cd bin && zip -r - $(name)-$(version)-freebsd-386) > bin/$(name)-$(version)-freebsd-386.zip
 
 	rm -Rf bin/$(name)-$(version)-osx-amd64
+	rm -Rf bin/$(name)-$(version)-osx-arm64
 	rm -Rf bin/$(name)-$(version)-linux-386
 	rm -Rf bin/$(name)-$(version)-linux-amd64
 	rm -Rf bin/$(name)-$(version)-linux-arm
